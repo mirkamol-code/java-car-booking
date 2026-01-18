@@ -3,7 +3,6 @@ package com.mirkamolcode.dao;
 import com.mirkamolcode.model.CarBooking;
 import com.mirkamolcode.model.User;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.UUID;
 
 public class CarBookingDAO {
