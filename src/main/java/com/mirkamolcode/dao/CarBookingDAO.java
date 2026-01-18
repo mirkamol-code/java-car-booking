@@ -18,7 +18,7 @@ public class CarBookingDAO {
         carBookingsByUser = new CarBooking[CAPACITY];
     }
 
-    public UUID bookCar(CarBooking newBooking) {
+    public UUID saveCarBooking(CarBooking newBooking) {
         resizeIfNeeded();
         carBookings[nextAvailableSlot] = newBooking;
         ++nextAvailableSlot;
