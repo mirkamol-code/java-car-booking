@@ -1,10 +1,7 @@
 package com.mirkamolcode.dao;
 
 import com.mirkamolcode.model.Car;
-import com.mirkamolcode.model.CarBooking;
 import com.mirkamolcode.model.enums.Brand;
-
-import java.util.Arrays;
 
 public class CarDAO {
     private static Car[] cars;
