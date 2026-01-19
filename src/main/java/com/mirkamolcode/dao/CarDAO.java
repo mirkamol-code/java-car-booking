@@ -1,7 +1,10 @@
 package com.mirkamolcode.dao;
 
 import com.mirkamolcode.model.Car;
+import com.mirkamolcode.model.CarBooking;
 import com.mirkamolcode.model.enums.Brand;
+
+import java.util.Arrays;
 
 public class CarDAO {
     private static Car[] cars;
@@ -52,5 +55,19 @@ public class CarDAO {
             }
         }
         return null;
+    }
+
+    public void removeCarFromUnbookedCarArray(Car bookedCar) {
+        var indexToRemove = 0;
+        for (int i = 0; i < cars.length; i++) {
+            if (cars[i].getRegNumber() == bookedCar.getRegNumber()) {
+                indexToRemove = i;
+                Car[] shrunkedCarArray = new Car[cars.length - 1];
+                System.arraycopy(cars, 0, shrunkedCarArray, 0, cars.length);
+                System.arraycopy(cars, indexToRemove + 1, shrunkedCarArray, indexToRemove, cars.length - indexToRemove - 1);
+                cars = shrunkedCarArray;
+                --nextAvailableSlot;
+            }
+        }
     }
 }
