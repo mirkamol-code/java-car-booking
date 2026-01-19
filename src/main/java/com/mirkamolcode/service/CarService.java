@@ -12,25 +12,31 @@ public class CarService {
 
     public void getAllCars() {
         for (Car car : carDAO.selectAllCars()) {
-            if(car != null){
+            if (car != null) {
                 System.out.println(car);
             }
         }
     }
 
     public void getElectricCars() {
-        for (Car car : carDAO.selectElectricCars()) {
-            if(car != null) {
+        for (Car car : carDAO.selectAllCars()) {
+            if (car != null && car.isElectric()) {
                 System.out.println(car);
             }
         }
     }
 
-    public Car getCarByRegNumber(int regNumber) {
+    public Car getCarByRegNumber(String regNumber) {
         return carDAO.selectCarByRegNumber(regNumber);
     }
 
-    public void deleteCarFromUnbookedCarArray(Car car){
+    public boolean isRegNumberExist(String regNumber) {
+        Car car = carDAO.selectCarByRegNumber(regNumber);
+        return car != null;
+
+    }
+
+    public void deleteCarFromUnbookedCarArray(Car car) {
         carDAO.removeCarFromUnbookedCarArray(car);
     }
 }
