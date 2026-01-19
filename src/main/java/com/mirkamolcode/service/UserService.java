@@ -19,4 +19,9 @@ public class UserService {
     public User getUserById(String uuid){
         return userDAO.selectUserById(uuid);
     }
+
+    public boolean isUserExist(String uuid){
+        User user = userDAO.selectUserById(uuid);
+        return user != null;
+    }
 }

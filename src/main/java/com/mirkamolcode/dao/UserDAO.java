@@ -1,6 +1,8 @@
 package com.mirkamolcode.dao;
 
 import com.mirkamolcode.model.User;
+import com.mirkamolcode.model.enums.ResponseMessage;
+
 import java.util.UUID;
 
 public class UserDAO {
@@ -20,13 +22,18 @@ public class UserDAO {
     }
 
     public User selectUserById(String uuid) {
-        UUID inputId = UUID.fromString(uuid);
-        for (User user : users) {
-            if (user.getUuid() == inputId) {
-                return user;
+        try {
+            UUID inputId = UUID.fromString(uuid);
+            for (User user : users) {
+                if (user.getUuid().equals(inputId)) {
+                    return user;
+                }
             }
+        } catch (IllegalArgumentException e) {
+            System.out.println(ResponseMessage.INVALID_OPTION.getMessage());
         }
         return null;
     }
+
 }
 

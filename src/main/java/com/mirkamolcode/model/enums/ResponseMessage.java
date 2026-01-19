@@ -1,15 +1,19 @@
 package com.mirkamolcode.model.enums;
 
 public enum ResponseMessage {
-    INVALID_OPTION("not a valid option ❌"),
+    INVALID_OPTION(" not a valid option ❌"),
     NO_BOOKINGS("no bookings available 😕"),
     SELECTION_OF_USER_ID("➡️ select user id"),
     SELECTION_OF_CAR_REG_NUMBER("➡️ select car reg number"),
-    X_USER("❌ user "), NOT_BOOKED(" has no car booked"),
+    X_USER(" ❌ user "), NOT_BOOKED(" has no car booked"),
     BOOKED_CAR("🎉 Successfully booked car with reg number "),
     BOOKING_REF("Booking ref: "),
     BOOKINGS("booking = "),
-    NO_CARS("❌ No cars available for renting");
+    NO_CARS("❌ No cars available for renting"),
+    UNKNOWN_USER(" User Not Found"),
+    FOR_USER(" for user "),
+    NOT_FOUND(" ❌ not found "),
+    UNABLE_TO_BOOK(" ❌ Unable to book");
 
     private final String message;
 
