@@ -113,8 +113,6 @@ This approach improved understanding of how dynamic data structures work interna
 
 ---
 
----
-
 ## Learning Outcomes
 
 * Stronger understanding of Java OOP principles
