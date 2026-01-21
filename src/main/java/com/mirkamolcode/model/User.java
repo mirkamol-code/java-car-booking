@@ -3,18 +3,18 @@ package com.mirkamolcode.model;
 import java.util.UUID;
 
 public class User {
-    private final UUID uuid = UUID.randomUUID();
+    private UUID id;
     private String name;
-
-    public User() {
-    }
 
     public User(String name) {
         this.name = name;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public User() {
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getName() {
@@ -28,7 +28,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "uuid=" + uuid +
+                "uuid=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }

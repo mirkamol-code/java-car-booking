@@ -5,7 +5,6 @@ import com.mirkamolcode.model.enums.Brand;
 
 public class CarDAO {
     private static Car[] cars;
-
     static {
         cars = new Car[]{
                 new Car("1111", 28_000.0, Brand.AUDI, false),
@@ -35,14 +34,16 @@ public class CarDAO {
         return null;
     }
 
-    public void removeCarFromUnbookedCarArray(Car bookedCar) {
+    public void removeCar(Car bookedCar) {
         var indexToRemove = 0;
         for (int i = 0; i < cars.length; i++) {
             if (cars[i].getRegNumber().equals(bookedCar.getRegNumber())) {
                 indexToRemove = i;
                 Car[] shrunkedCarArray = new Car[cars.length - 1];
+
                 System.arraycopy(cars, 0, shrunkedCarArray, 0, cars.length-1);
                 System.arraycopy(cars, indexToRemove + 1, shrunkedCarArray, indexToRemove, cars.length - indexToRemove - 1);
+
                 cars = shrunkedCarArray;
             }
         }

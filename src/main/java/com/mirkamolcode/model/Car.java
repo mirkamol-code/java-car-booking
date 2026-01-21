@@ -2,6 +2,8 @@ package com.mirkamolcode.model;
 
 import com.mirkamolcode.model.enums.Brand;
 
+import java.util.Objects;
+
 public class Car {
     private String regNumber;
     private double rentalPricePerDay;
@@ -19,17 +21,53 @@ public class Car {
         return regNumber;
     }
 
+    public void setRegNumber(String regNumber) {
+        this.regNumber = regNumber;
+    }
+
+    public double getRentalPricePerDay() {
+        return rentalPricePerDay;
+    }
+
+    public void setRentalPricePerDay(double rentalPricePerDay) {
+        this.rentalPricePerDay = rentalPricePerDay;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
     public boolean isElectric() {
         return isElectric;
+    }
+
+    public void setElectric(boolean electric) {
+        isElectric = electric;
     }
 
     @Override
     public String toString() {
         return "Car{" +
-                "regNumber=" + regNumber +
+                "regNumber='" + regNumber + '\'' +
                 ", rentalPricePerDay=" + rentalPricePerDay +
                 ", brand=" + brand +
                 ", isElectric=" + isElectric +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return Double.compare(rentalPricePerDay, car.rentalPricePerDay) == 0 && isElectric == car.isElectric && Objects.equals(regNumber, car.regNumber) && brand == car.brand;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(regNumber, rentalPricePerDay, brand, isElectric);
     }
 }

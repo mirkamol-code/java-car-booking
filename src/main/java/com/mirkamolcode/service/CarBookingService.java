@@ -1,7 +1,6 @@
 package com.mirkamolcode.service;
 
 import com.mirkamolcode.dao.CarBookingDAO;
-import com.mirkamolcode.dao.CarDAO;
 import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.CarBooking;
 import com.mirkamolcode.model.User;
@@ -11,9 +10,9 @@ import java.util.UUID;
 import static com.mirkamolcode.model.enums.ResponseMessage.*;
 
 public class CarBookingService {
-    private CarBookingDAO carBookingDAO;
-    private CarService carService;
-    private UserService userService;
+    private final CarBookingDAO carBookingDAO;
+    private final CarService carService;
+    private final UserService userService;
 
     public CarBookingService() {
         this.carBookingDAO = new CarBookingDAO();
@@ -24,37 +23,68 @@ public class CarBookingService {
 
     public void bookCar(User user, Car car) {
         CarBooking carBooking = new CarBooking(user, car);
+        carBooking.setBookingId(UUID.randomUUID());
         UUID savedBookingId = carBookingDAO.saveCarBooking(carBooking);
-        carService.deleteCarFromUnbookedCarArray(car);
+
+        carService.deleteCar(car);
+
         System.out.println(BOOKED_CAR.getMessage() + car.getRegNumber() + FOR_USER.getMessage() + user);
         System.out.println(BOOKING_REF.getMessage() + savedBookingId);
     }
 
 
     public void getAllBookings() {
-        CarBooking[] carBookings = carBookingDAO.selectAllCarBookings();
+        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
         if (carBookings[0] != null) {
             for (CarBooking carBooking : carBookings) {
-                System.out.println(carBooking);
+                if (carBooking != null) {
+                    System.out.println(carBooking);
+                }
             }
         } else {
             System.out.println(NO_BOOKINGS.getMessage());
         }
     }
 
-    public void getUserBookedCarsByUserId(String uuid) {
-        User userById = userService.getUserById(uuid);
-        CarBooking[] carBookings = carBookingDAO.selectAllCarBookings();
-        if (carBookings[0] != null) {
+    public void getUserBookedCarsByUserId(UUID id) {
+        User inputUserId = userService.getUserById(id);
+        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
+        if (inputUserId != null) {
             for (CarBooking carBooking : carBookings) {
-                if (carBooking.getUser().equals(userById)) {
-                    System.out.println(carBooking);
+                if (carBooking == null) {
+                    break;
+                } else {
+                    if (carBooking.getUser().equals(inputUserId)) {
+                        System.out.println(carBooking);
+                    }
                 }
             }
-        } else if (userById == null) {
-            System.out.println(X_USER.getMessage());
         } else {
-            System.out.println(X_USER.getMessage() + userById + NOT_BOOKED.getMessage());
+            System.out.println(X_USER.getMessage() + inputUserId + NOT_BOOKED.getMessage());
         }
+    }
+
+    public boolean deleteCarBooking(UUID carBookingId) {
+        return carBookingDAO.deleteCarBooking(carBookingId);
+    }
+
+    public boolean isCarBookingExist(UUID id) {
+       try {
+           for (CarBooking carBooking : carBookingDAO.selectAllBookings()) {
+               if (carBooking.getBookingId().equals(id)) {
+                   return true;
+               }
+           }
+       }catch (IllegalArgumentException e){
+           System.out.print(INVALID_OPTION.getMessage() + " ");
+       }
+
+        return false;
+    }
+
+    public boolean isCarBookingArrayEmpty(){
+        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
+        return carBookings[0] != null;
+
     }
 }

@@ -4,18 +4,23 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class CarBooking {
-    private final UUID bookingId = UUID.randomUUID();
+    private UUID bookingId;
     private User user;
     private Car car;
-    private final LocalDateTime bookingTime = LocalDateTime.now();
+    private LocalDateTime bookingTime;
 
     public CarBooking(User user, Car car) {
+        bookingTime = LocalDateTime.now();
         this.user = user;
         this.car = car;
     }
 
     public UUID getBookingId() {
         return bookingId;
+    }
+
+    public void setBookingId(UUID bookingId) {
+        this.bookingId = bookingId;
     }
 
     public User getUser() {

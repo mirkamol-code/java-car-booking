@@ -8,23 +8,42 @@ import com.mirkamolcode.service.CarService;
 import com.mirkamolcode.service.UserService;
 
 import java.util.Scanner;
+import java.util.UUID;
 
 import static com.mirkamolcode.model.enums.ResponseMessage.*;
 
 
 public class Main {
-    private static CarBookingService carBookingService = new CarBookingService();
-    private static CarService carService = new CarService();
-    private static UserService userService = new UserService();
+    private static final CarBookingService carBookingService = new CarBookingService();
+    private static final CarService carService = new CarService();
+    private static final UserService userService = new UserService();
 
     static void main() {
         printMenu();
         Scanner scanner = new Scanner(System.in);
 
-        String inputString = scanner.nextLine();
-        while (!inputString.equals("7")) {
+        int inputString = scanner.nextInt();
+        while (inputString != 7) {
             switch (inputString) {
-                case "1":
+                case 0:
+                    if (!carBookingService.isCarBookingArrayEmpty()){
+                        System.out.println(NO_BOOKINGS);
+                    }else {
+                        carBookingService.getAllBookings();
+                        System.out.println(SELECTION_OF_BOOKING_ID.getMessage());
+                        UUID bookingId = UUID.fromString(scanner.nextLine());
+
+                        boolean carBookingExist = carBookingService.isCarBookingExist(bookingId);
+                        if (!carBookingExist) {
+                            System.out.println(NOT_FOUND);
+
+                        } else {
+                            carBookingService.deleteCarBooking(bookingId);
+                        }
+                    }
+                    printMenu();
+                    break;
+                case 1:
                     carService.getAllCars();
                     System.out.println(SELECTION_OF_CAR_REG_NUMBER.getMessage());
 
@@ -34,16 +53,15 @@ public class Main {
 
                     } else {
                         Car carByRegNumber = carService.getCarByRegNumber(carRegNumber);
-
-                        userService.getAllUsers();
+                        printAllUsers();
                         System.out.println(SELECTION_OF_USER_ID.getMessage());
-                        String user_id = scanner.nextLine();
+                        var userId = UUID.fromString(scanner.nextLine());
 
-                        if (!userService.isUserExist(user_id)) {
+                        if (!userService.isUserExist(userId)) {
                             System.out.println(NOT_FOUND.getMessage());
 
                         } else {
-                            User userById = userService.getUserById(user_id);
+                            User userById = userService.getUserById(userId);
                             carBookingService.bookCar(userById, carByRegNumber);
                             System.out.println();
 
@@ -51,48 +69,54 @@ public class Main {
                     }
                     printMenu();
                     break;
-                case "2":
-                    userService.getAllUsers();
+                case 2:
+                    printAllUsers();
                     System.out.println(SELECTION_OF_USER_ID.getMessage());
-                    String userId = scanner.nextLine();
+                    UUID userId = UUID.fromString(scanner.nextLine());
                     carBookingService.getUserBookedCarsByUserId(userId);
                     System.out.println();
                     printMenu();
                     break;
-                case "3":
+                case 3:
                     System.out.println();
                     carBookingService.getAllBookings();
                     System.out.println();
                     printMenu();
                     break;
-                case "4":
+                case 4:
                     System.out.println();
                     carService.getAllCars();
                     System.out.println();
                     printMenu();
                     break;
-                case "5":
+                case 5:
                     System.out.println();
                     carService.getElectricCars();
                     System.out.println();
                     printMenu();
                     break;
-                case "6":
+                case 6:
                     System.out.println();
-                    userService.getAllUsers();
+                    printAllUsers();
                     System.out.println();
                     printMenu();
                     break;
                 default:
                     System.out.println(inputString + INVALID_OPTION.getMessage());
             }
-            inputString = scanner.nextLine();
+            inputString = scanner.nextInt();
         }
 
 
     }
 
-    static void printMenu() {
+    private static void printAllUsers() {
+        for (User u : userService.getAllUsers()) {
+            System.out.println(u);
+        }
+    }
+
+    static void  printMenu() {
         for (Menu value : Menu.values()) {
             System.out.println(value.getMessage());
         }
