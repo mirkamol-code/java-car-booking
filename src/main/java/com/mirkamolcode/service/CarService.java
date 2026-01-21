@@ -18,12 +18,23 @@ public class CarService {
         }
     }
 
-    public void getElectricCars() {
-        for (Car car : carDAO.selectAllCars()) {
+    public Car[] getElectricCars() {
+        int count = 0;
+        Car[] cars = carDAO.selectAllCars();
+        for (Car car : cars) {
             if (car != null && car.isElectric()) {
-                System.out.println(car);
+                count++;
             }
         }
+        Car[] electricCars = new Car[count];
+        for (int i = 0; i < cars.length; i++) {
+            Car car = cars[i];
+            if (car != null && car.isElectric()) {
+                electricCars[i] = car;
+            }
+        }
+        return electricCars;
+
     }
 
     public Car getCarByRegNumber(String regNumber) {

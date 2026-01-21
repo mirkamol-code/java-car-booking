@@ -3,7 +3,7 @@ package com.mirkamolcode.model;
 import java.util.UUID;
 
 public class User {
-    private final UUID id = UUID.randomUUID();
+    private UUID id;
     private String name;
 
     public User(String name) {

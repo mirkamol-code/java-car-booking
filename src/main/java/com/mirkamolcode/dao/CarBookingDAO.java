@@ -2,53 +2,75 @@ package com.mirkamolcode.dao;
 
 import com.mirkamolcode.model.CarBooking;
 
-import java.util.SortedMap;
 import java.util.UUID;
 
 public class CarBookingDAO {
-    private static CarBooking[] carBookings;
-    private static int nextAvailableSlot = 0;
-    private static int CAPACITY = 100;
+    private static CarBooking[] bookings;
+    private int capacity = 100;
+    private int currentSize = 0;
 
-    static {
-        carBookings = new CarBooking[CAPACITY];
+    public CarBookingDAO() {
+        bookings = new CarBooking[capacity];
+    }
+
+    public CarBookingDAO(int capacity) {
+        this.capacity = capacity;
+        bookings = new CarBooking[capacity];
     }
 
     public UUID saveCarBooking(CarBooking newBooking) {
-        resizeIfNeeded();
-        carBookings[nextAvailableSlot++] = newBooking;
-        return newBooking.getBookingId();
-    }
-
-    private void resizeIfNeeded() {
-        if (nextAvailableSlot + 1 > CAPACITY) {
-            CarBooking[] newArray = new CarBooking[carBookings.length + 1];
-            System.arraycopy(carBookings, 0, newArray, 0, carBookings.length);
-            carBookings = newArray;
+        if (currentSize >= capacity) {
+            this.capacity =  bookings.length * 2;
+            CarBooking[] newArray = new CarBooking[this.capacity];
+            System.arraycopy(bookings, 0, newArray, 0, bookings.length);
+            bookings = newArray;
         }
+
+        int next = getNextAvailableSlot();
+        if (next == -1) {
+            throw new IllegalStateException("No available slots to save car");
+        }
+
+        bookings[next] = newBooking;
+        currentSize++;
+        return newBooking.getBookingId();
+
     }
 
-    public CarBooking[] selectAllCarBookings() {
-        return carBookings;
-    }
 
-
-    public String deleteCarBooking(String bookingId){
-        UUID inputId = UUID.fromString(bookingId);
-        System.out.println("Initial size: " + carBookings.length);
-        for (int indexToRemove = 0; indexToRemove < carBookings.length; indexToRemove++) {
-            if(carBookings[indexToRemove].getBookingId().equals(inputId)){
-                CarBooking[] shrunkedArray = new CarBooking[carBookings.length - 1];
-
-                System.arraycopy(carBookings, 0, shrunkedArray, 0, carBookings.length -1);
-                System.arraycopy(carBookings, indexToRemove + 1, shrunkedArray, indexToRemove, carBookings.length - indexToRemove - 1);
-
-                carBookings = shrunkedArray;
-                nextAvailableSlot--;
-                return bookingId;
+    private int getNextAvailableSlot() {
+        for (int i = 0; i < bookings.length; i++) {
+            if (bookings[i] == null) {
+                return i;
             }
         }
-        return null;
+        return -1;
+    }
+
+    public CarBooking[] selectAllBookings() {
+        return bookings;
+    }
+
+    public boolean deleteCarBooking(UUID bookingId){
+        System.out.println("Initial size: " + bookings.length);
+
+        int index = -1;
+
+        for (int i = 0; i < bookings.length; i++) {
+            if (bookings[i].getBookingId().equals(bookingId)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1){
+            return false;
+        }
+
+        bookings[index] = null;
+
+        return true;
+
     }
 
 }

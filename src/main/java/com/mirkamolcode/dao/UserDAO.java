@@ -21,16 +21,11 @@ public class UserDAO {
         return users;
     }
 
-    public User selectUserById(String userId) {
-        try {
-            UUID inputId = UUID.fromString(userId);
-            for (User user : users) {
-                if (user.getId().equals(inputId)) {
-                    return user;
-                }
+    public User selectUserById(UUID userId) {
+        for (User user : users) {
+            if (user.getId().equals(userId)) {
+                return user;
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println(ResponseMessage.INVALID_OPTION.getMessage());
         }
         return null;
     }

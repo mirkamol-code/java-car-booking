@@ -4,7 +4,6 @@ import com.mirkamolcode.dao.CarBookingDAO;
 import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.CarBooking;
 import com.mirkamolcode.model.User;
-import com.mirkamolcode.model.enums.ResponseMessage;
 
 import java.util.UUID;
 
@@ -35,7 +34,7 @@ public class CarBookingService {
 
 
     public void getAllBookings() {
-        CarBooking[] carBookings = carBookingDAO.selectAllCarBookings();
+        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
         if (carBookings[0] != null) {
             for (CarBooking carBooking : carBookings) {
                 if (carBooking != null) {
@@ -47,9 +46,9 @@ public class CarBookingService {
         }
     }
 
-    public void getUserBookedCarsByUserId(String id) {
+    public void getUserBookedCarsByUserId(UUID id) {
         User inputUserId = userService.getUserById(id);
-        CarBooking[] carBookings = carBookingDAO.selectAllCarBookings();
+        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
         if (inputUserId != null) {
             for (CarBooking carBooking : carBookings) {
                 if (carBooking == null) {
@@ -65,19 +64,14 @@ public class CarBookingService {
         }
     }
 
-    public void deleteCarBooking(String carBookingId) {
-        if (carBookingDAO.deleteCarBooking(carBookingId) != null) {
-            System.out.println("Delete it");
-        } else {
-            System.out.println(NOT_FOUND.getMessage());
-        }
+    public boolean deleteCarBooking(UUID carBookingId) {
+        return carBookingDAO.deleteCarBooking(carBookingId);
     }
 
-    public boolean isCarBookingExist(String id) {
+    public boolean isCarBookingExist(UUID id) {
        try {
-           UUID intputID = UUID.fromString(id);
-           for (CarBooking carBooking : carBookingDAO.selectAllCarBookings()) {
-               if (carBooking.getBookingId().equals(intputID)) {
+           for (CarBooking carBooking : carBookingDAO.selectAllBookings()) {
+               if (carBooking.getBookingId().equals(id)) {
                    return true;
                }
            }
@@ -89,7 +83,7 @@ public class CarBookingService {
     }
 
     public boolean isCarBookingArrayEmpty(){
-        CarBooking[] carBookings = carBookingDAO.selectAllCarBookings();
+        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
         return carBookings[0] != null;
 
     }

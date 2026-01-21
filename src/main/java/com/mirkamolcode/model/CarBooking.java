@@ -7,9 +7,10 @@ public class CarBooking {
     private UUID bookingId;
     private User user;
     private Car car;
-    private final LocalDateTime bookingTime = LocalDateTime.now();
+    private LocalDateTime bookingTime;
 
     public CarBooking(User user, Car car) {
+        bookingTime = LocalDateTime.now();
         this.user = user;
         this.car = car;
     }
