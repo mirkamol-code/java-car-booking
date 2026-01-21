@@ -19,8 +19,32 @@ public class Car {
         return regNumber;
     }
 
+    public void setRegNumber(String regNumber) {
+        this.regNumber = regNumber;
+    }
+
+    public double getRentalPricePerDay() {
+        return rentalPricePerDay;
+    }
+
+    public void setRentalPricePerDay(double rentalPricePerDay) {
+        this.rentalPricePerDay = rentalPricePerDay;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
     public boolean isElectric() {
         return isElectric;
+    }
+
+    public void setElectric(boolean electric) {
+        isElectric = electric;
     }
 
     @Override
