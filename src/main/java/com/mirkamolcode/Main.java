@@ -24,6 +24,24 @@ public class Main {
         String inputString = scanner.nextLine();
         while (!inputString.equals("7")) {
             switch (inputString) {
+                case "0":
+                    if (!carBookingService.isCarBookingArrayEmpty()){
+                        System.out.println(NO_BOOKINGS);
+                    }else {
+                        carBookingService.getAllBookings();
+                        System.out.println(SELECTION_OF_BOOKING_ID.getMessage());
+                        String booking_id = scanner.nextLine();
+
+                        boolean carBookingExist = carBookingService.isCarBookingExist(booking_id);
+                        if (!carBookingExist) {
+                            System.out.println(NOT_FOUND);
+
+                        } else {
+                            carBookingService.deleteCarBooking(booking_id);
+                        }
+                    }
+                    printMenu();
+                    break;
                 case "1":
                     carService.getAllCars();
                     System.out.println(SELECTION_OF_CAR_REG_NUMBER.getMessage());
@@ -92,7 +110,7 @@ public class Main {
 
     }
 
-    static void printMenu() {
+    static void  printMenu() {
         for (Menu value : Menu.values()) {
             System.out.println(value.getMessage());
         }

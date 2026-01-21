@@ -5,6 +5,7 @@ public enum ResponseMessage {
     NO_BOOKINGS("no bookings available 😕"),
     SELECTION_OF_USER_ID("➡️ select user id"),
     SELECTION_OF_CAR_REG_NUMBER("➡️ select car reg number"),
+    SELECTION_OF_BOOKING_ID("➡️ select booking id number"),
     X_USER(" ❌ user "), NOT_BOOKED(" has no car booked"),
     BOOKED_CAR("🎉 Successfully booked car with reg number "),
     BOOKING_REF("Booking ref: "),

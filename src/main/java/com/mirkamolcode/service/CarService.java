@@ -4,7 +4,7 @@ import com.mirkamolcode.dao.CarDAO;
 import com.mirkamolcode.model.Car;
 
 public class CarService {
-    private CarDAO carDAO;
+    private final CarDAO carDAO;
 
     public CarService() {
         this.carDAO = new CarDAO();
@@ -36,7 +36,7 @@ public class CarService {
 
     }
 
-    public void deleteCarFromUnbookedCarArray(Car car) {
-        carDAO.removeCarFromUnbookedCarArray(car);
+    public void deleteCar(Car car) {
+        carDAO.removeCar(car);
     }
 }

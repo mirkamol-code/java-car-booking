@@ -21,11 +21,11 @@ public class UserDAO {
         return users;
     }
 
-    public User selectUserById(String uuid) {
+    public User selectUserById(String userId) {
         try {
-            UUID inputId = UUID.fromString(uuid);
+            UUID inputId = UUID.fromString(userId);
             for (User user : users) {
-                if (user.getUuid().equals(inputId)) {
+                if (user.getId().equals(inputId)) {
                     return user;
                 }
             }
