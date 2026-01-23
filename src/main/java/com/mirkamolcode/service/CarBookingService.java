@@ -49,18 +49,23 @@ public class CarBookingService {
     public void getUserBookedCarsByUserId(UUID id) {
         User inputUserId = userService.getUserById(id);
         CarBooking[] carBookings = carBookingDAO.selectAllBookings();
-        if (inputUserId != null) {
+        int countUserBookings = 0;
+        if (userService.isUserExist(id)) {
             for (CarBooking carBooking : carBookings) {
                 if (carBooking == null) {
+                    if (countUserBookings == 0) {
+                        System.out.println(X_USER.getMessage() + inputUserId + NOT_BOOKED.getMessage());
+                    }
                     break;
                 } else {
                     if (carBooking.getUser().equals(inputUserId)) {
                         System.out.println(carBooking);
+                        countUserBookings++;
                     }
                 }
             }
         } else {
-            System.out.println(X_USER.getMessage() + inputUserId + NOT_BOOKED.getMessage());
+            System.out.println(NOT_FOUND.getMessage());
         }
     }
 
@@ -69,20 +74,20 @@ public class CarBookingService {
     }
 
     public boolean isCarBookingExist(UUID id) {
-       try {
-           for (CarBooking carBooking : carBookingDAO.selectAllBookings()) {
-               if (carBooking.getBookingId().equals(id)) {
-                   return true;
-               }
-           }
-       }catch (IllegalArgumentException e){
-           System.out.print(INVALID_OPTION.getMessage() + " ");
-       }
+        try {
+            for (CarBooking carBooking : carBookingDAO.selectAllBookings()) {
+                if (carBooking.getBookingId().equals(id)) {
+                    return true;
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.print(INVALID_OPTION.getMessage() + " ");
+        }
 
         return false;
     }
 
-    public boolean isCarBookingArrayEmpty(){
+    public boolean isCarBookingArrayEmpty() {
         CarBooking[] carBookings = carBookingDAO.selectAllBookings();
         return carBookings[0] != null;
 
