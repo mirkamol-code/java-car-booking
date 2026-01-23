@@ -20,7 +20,7 @@ public class CarBookingDAO {
 
     public UUID saveCarBooking(CarBooking newBooking) {
         if (currentSize >= capacity) {
-            this.capacity =  bookings.length * 2;
+            this.capacity = bookings.length * 2;
             CarBooking[] newArray = new CarBooking[this.capacity];
             System.arraycopy(bookings, 0, newArray, 0, bookings.length);
             bookings = newArray;
@@ -51,9 +51,7 @@ public class CarBookingDAO {
         return bookings;
     }
 
-    public boolean deleteCarBooking(UUID bookingId){
-        System.out.println("Initial size: " + bookings.length);
-
+    public boolean deleteCarBooking1(UUID bookingId) {
         int index = -1;
 
         for (int i = 0; i < bookings.length; i++) {
@@ -63,7 +61,7 @@ public class CarBookingDAO {
             }
         }
 
-        if (index == -1){
+        if (index == -1) {
             return false;
         }
 
@@ -73,4 +71,19 @@ public class CarBookingDAO {
 
     }
 
+    public boolean deleteCarBooking(UUID bookingId) {
+        for (int indexToRemove = 0; indexToRemove < bookings.length; indexToRemove++) {
+            if (bookings[indexToRemove].getBookingId().equals(bookingId)) {
+                CarBooking[] shrunkedArray = new CarBooking[bookings.length - 1];
+
+                System.arraycopy(bookings, 0, shrunkedArray, 0, bookings.length - 1);
+                System.arraycopy(bookings, indexToRemove + 1, shrunkedArray, indexToRemove, bookings.length - indexToRemove - 1);
+
+                bookings = shrunkedArray;
+                currentSize--;
+                return true;
+            }
+        }
+        return false;
+    }
 }
