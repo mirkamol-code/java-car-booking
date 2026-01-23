@@ -7,9 +7,12 @@ import com.mirkamolcode.service.CarBookingService;
 import com.mirkamolcode.service.CarService;
 import com.mirkamolcode.service.UserService;
 
+import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.UUID;
 
+import static com.mirkamolcode.dao.UserDAO.FILE_PATH;
 import static com.mirkamolcode.model.enums.ResponseMessage.*;
 
 
@@ -19,18 +22,21 @@ public class Main {
     private static final UserService userService = new UserService();
 
     static void main() {
+        File file = new File(FILE_PATH);
+        userService.writeUsersToFile(file);
+        userService.getUsersFromFileToArray(file);
         printMenu();
         Scanner scanner = new Scanner(System.in);
-
         int inputString = scanner.nextInt();
         while (inputString != 7) {
             switch (inputString) {
                 case 0:
-                    if (!carBookingService.isCarBookingArrayEmpty()){
-                        System.out.println(NO_BOOKINGS);
-                    }else {
+                    if (!carBookingService.isCarBookingArrayEmpty()) {
+                        System.out.println(NO_BOOKINGS.getMessage());
+                    } else {
                         carBookingService.getAllBookings();
                         System.out.println(SELECTION_OF_BOOKING_ID.getMessage());
+                        scanner.nextLine();
                         UUID bookingId = UUID.fromString(scanner.nextLine());
 
                         boolean carBookingExist = carBookingService.isCarBookingExist(bookingId);
@@ -38,7 +44,7 @@ public class Main {
                             System.out.println(NOT_FOUND);
 
                         } else {
-                            carBookingService.deleteCarBooking(bookingId);
+                            System.out.println(carBookingService.deleteCarBooking(bookingId));
                         }
                     }
                     printMenu();
@@ -46,6 +52,7 @@ public class Main {
                 case 1:
                     carService.getAllCars();
                     System.out.println(SELECTION_OF_CAR_REG_NUMBER.getMessage());
+                    scanner.nextLine();
 
                     String carRegNumber = scanner.nextLine();
                     if (!carService.isRegNumberExist(carRegNumber)) {
@@ -53,7 +60,7 @@ public class Main {
 
                     } else {
                         Car carByRegNumber = carService.getCarByRegNumber(carRegNumber);
-                        printAllUsers();
+                        printAllUsers(file);
                         System.out.println(SELECTION_OF_USER_ID.getMessage());
                         var userId = UUID.fromString(scanner.nextLine());
 
@@ -70,8 +77,9 @@ public class Main {
                     printMenu();
                     break;
                 case 2:
-                    printAllUsers();
+                    printAllUsers(file);
                     System.out.println(SELECTION_OF_USER_ID.getMessage());
+                    scanner.nextLine();
                     UUID userId = UUID.fromString(scanner.nextLine());
                     carBookingService.getUserBookedCarsByUserId(userId);
                     System.out.println();
@@ -91,13 +99,13 @@ public class Main {
                     break;
                 case 5:
                     System.out.println();
-                    carService.getElectricCars();
+                    System.out.println(Arrays.toString(carService.getElectricCars()));
                     System.out.println();
                     printMenu();
                     break;
                 case 6:
                     System.out.println();
-                    printAllUsers();
+                    printAllUsers(file);
                     System.out.println();
                     printMenu();
                     break;
@@ -110,13 +118,15 @@ public class Main {
 
     }
 
-    private static void printAllUsers() {
-        for (User u : userService.getAllUsers()) {
-            System.out.println(u);
+    private static void printAllUsers(File file) {
+        for (User user : userService.getAllUsers(file)) {
+            if (user != null) {
+                System.out.println(user);
+            }
         }
     }
 
-    static void  printMenu() {
+    static void printMenu() {
         for (Menu value : Menu.values()) {
             System.out.println(value.getMessage());
         }
