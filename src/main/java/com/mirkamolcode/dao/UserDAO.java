@@ -13,6 +13,8 @@ public interface UserDAO {
 
     User[] getAllUsers(File file);
 
+    void printAllUsers(File file);
+
     User getUserById(UUID userId);
 
     default boolean isUserExist(UUID uuid){

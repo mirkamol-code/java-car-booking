@@ -22,6 +22,15 @@ public class UserService implements UserDAO {
         return users;
     }
 
+    @Override
+    public void printAllUsers(File file) {
+        for (User user : getAllUsers(file)) {
+            if (user != null) {
+                System.out.println(user);
+            }
+        }
+    }
+
     public void getUsersFromFileToArray(File file){
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             resizeIfNeeded(file);
