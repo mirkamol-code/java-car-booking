@@ -27,10 +27,12 @@ public class CarService {
             }
         }
         Car[] electricCars = new Car[count];
+        int index = 0;
         for (int i = 0; i < cars.length; i++) {
             Car car = cars[i];
             if (car != null && car.isElectric()) {
-                electricCars[i] = car;
+                electricCars[index] = car;
+                index++;
             }
         }
         return electricCars;
