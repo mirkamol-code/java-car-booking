@@ -2,6 +2,8 @@ package com.mirkamolcode;
 
 import com.mirkamolcode.dao.CarBookingDAO;
 import com.mirkamolcode.dao.CarDAO;
+import com.mirkamolcode.dao.UserDAO;
+import com.mirkamolcode.dao.UserFileDAO;
 import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.User;
 import com.mirkamolcode.model.enums.Menu;
@@ -9,12 +11,9 @@ import com.mirkamolcode.service.CarBookingService;
 import com.mirkamolcode.service.CarService;
 import com.mirkamolcode.service.UserService;
 
-import java.io.*;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.UUID;
 
-import static com.mirkamolcode.dao.UserDAO.FILE_PATH;
 import static com.mirkamolcode.model.enums.ResponseMessage.*;
 
 
@@ -22,17 +21,14 @@ public class Main {
 
     static void main() {
         //Construct dependencies
-        UserService userService = new UserService();
+        UserDAO userDAO = new UserFileDAO();
+        UserService userService = new UserService(userDAO);
         CarDAO carDAO = new CarDAO();
         CarService carService = new CarService(carDAO);
         CarBookingDAO carBookingDAO = new CarBookingDAO();
+
         //Inject dependencies
         CarBookingService carBookingService = new CarBookingService(carBookingDAO, carService, userService);
-
-        File file = new File(FILE_PATH);
-
-        userService.writeUsersToFile(file);
-        userService.getUsersFromFileToArray(file);
 
         printMenu();
 
@@ -44,7 +40,7 @@ public class Main {
                     if (!carBookingService.isCarBookingArrayEmpty()) {
                         System.out.println(NO_BOOKINGS.getMessage());
                     } else {
-                        carBookingService.getAllBookings();
+                        carBookingService.printAllBookings();
                         System.out.println(SELECTION_OF_BOOKING_ID.getMessage());
                         scanner.nextLine();
                         UUID bookingId = UUID.fromString(scanner.nextLine());
@@ -60,7 +56,7 @@ public class Main {
                     printMenu();
                     break;
                 case 1:
-                    carService.getAllCars();
+                    carService.printAllCars();
                     System.out.println(SELECTION_OF_CAR_REG_NUMBER.getMessage());
                     scanner.nextLine();
 
@@ -70,11 +66,11 @@ public class Main {
 
                     } else {
                         Car carByRegNumber = carService.getCarByRegNumber(carRegNumber);
-                        userService.printAllUsers(file);
+                        userService.printAllUsers();
                         System.out.println(SELECTION_OF_USER_ID.getMessage());
                         var userId = UUID.fromString(scanner.nextLine());
 
-                        if (!userService.isUserExist(userId)) {
+                        if (!userService.isUserPresent(userId)) {
                             System.out.println(NOT_FOUND.getMessage());
 
                         } else {
@@ -87,35 +83,35 @@ public class Main {
                     printMenu();
                     break;
                 case 2:
-                    userService.printAllUsers(file);
+                    userService.printAllUsers();
                     System.out.println(SELECTION_OF_USER_ID.getMessage());
                     scanner.nextLine();
                     UUID userId = UUID.fromString(scanner.nextLine());
-                    carBookingService.getUserBookedCarsByUserId(userId);
+                    carBookingService.printUserBookedCars(userId);
                     System.out.println();
                     printMenu();
                     break;
                 case 3:
                     System.out.println();
-                    carBookingService.getAllBookings();
+                    carBookingService.printAllBookings();
                     System.out.println();
                     printMenu();
                     break;
                 case 4:
                     System.out.println();
-                    carService.getAllCars();
+                    carService.printAllCars();
                     System.out.println();
                     printMenu();
                     break;
                 case 5:
                     System.out.println();
-                    System.out.println(Arrays.toString(carService.getElectricCars()));
+                    carService.printElectricCars();
                     System.out.println();
                     printMenu();
                     break;
                 case 6:
                     System.out.println();
-                    userService.printAllUsers(file);
+                    userService.printAllUsers();
                     System.out.println();
                     printMenu();
                     break;

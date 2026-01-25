@@ -53,7 +53,7 @@ public class CarBookingService {
     }
 
     private CarBooking[] getUserBookedCarsByUserId(UUID id) {
-        if (!userService.checkIfUserExsist(id)) {
+        if (!userService.isUserPresent(id)) {
             return new CarBooking[0];
         }
 
