@@ -10,7 +10,8 @@ public class CarService {
         this.carDAO = carDAO;
     }
 
-    public void getAllCars() {
+
+    public void printAllCars() {
         for (Car car : carDAO.selectAllCars()) {
             if (car != null) {
                 System.out.println(car);
@@ -18,7 +19,13 @@ public class CarService {
         }
     }
 
-    public Car[] getElectricCars() {
+    public void printElectricCars(){
+        for (Car electricCar : getElectricCars()) {
+            System.out.println(electricCar);
+        }
+    }
+
+    private Car[] getElectricCars() {
         int count = 0;
         Car[] cars = carDAO.selectAllCars();
         for (Car car : cars) {
@@ -26,10 +33,10 @@ public class CarService {
                 count++;
             }
         }
+
         Car[] electricCars = new Car[count];
         int index = 0;
-        for (int i = 0; i < cars.length; i++) {
-            Car car = cars[i];
+        for (Car car : cars) {
             if (car != null && car.isElectric()) {
                 electricCars[index] = car;
                 index++;
