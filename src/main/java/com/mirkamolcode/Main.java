@@ -1,9 +1,6 @@
 package com.mirkamolcode;
 
-import com.mirkamolcode.dao.CarBookingDAO;
-import com.mirkamolcode.dao.CarDAO;
-import com.mirkamolcode.dao.UserDAO;
-import com.mirkamolcode.dao.UserFileDAO;
+import com.mirkamolcode.dao.*;
 import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.User;
 import com.mirkamolcode.model.enums.Menu;
@@ -21,7 +18,7 @@ public class Main {
 
     static void main() {
         //Construct dependencies
-        UserDAO userDAO = new UserFileDAO();
+        UserDAO userDAO = new UserArrayDAO();
         UserService userService = new UserService(userDAO);
         CarDAO carDAO = new CarDAO();
         CarService carService = new CarService(carDAO);
