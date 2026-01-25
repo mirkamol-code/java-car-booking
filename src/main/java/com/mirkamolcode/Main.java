@@ -1,5 +1,7 @@
 package com.mirkamolcode;
 
+import com.mirkamolcode.dao.CarBookingDAO;
+import com.mirkamolcode.dao.CarDAO;
 import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.User;
 import com.mirkamolcode.model.enums.Menu;
@@ -17,15 +19,23 @@ import static com.mirkamolcode.model.enums.ResponseMessage.*;
 
 
 public class Main {
-    private static final CarBookingService carBookingService = new CarBookingService();
-    private static final CarService carService = new CarService();
-    private static final UserService userService = new UserService();
 
     static void main() {
+        //Construct dependencies
+        UserService userService = new UserService();
+        CarDAO carDAO = new CarDAO();
+        CarService carService = new CarService(carDAO);
+        CarBookingDAO carBookingDAO = new CarBookingDAO();
+        //Inject dependencies
+        CarBookingService carBookingService = new CarBookingService(carBookingDAO, carService, userService);
+
         File file = new File(FILE_PATH);
+
         userService.writeUsersToFile(file);
         userService.getUsersFromFileToArray(file);
+
         printMenu();
+
         Scanner scanner = new Scanner(System.in);
         int inputString = scanner.nextInt();
         while (inputString != 7) {
@@ -60,7 +70,7 @@ public class Main {
 
                     } else {
                         Car carByRegNumber = carService.getCarByRegNumber(carRegNumber);
-                        printAllUsers(file);
+                        userService.printAllUsers(file);
                         System.out.println(SELECTION_OF_USER_ID.getMessage());
                         var userId = UUID.fromString(scanner.nextLine());
 
@@ -77,7 +87,7 @@ public class Main {
                     printMenu();
                     break;
                 case 2:
-                    printAllUsers(file);
+                    userService.printAllUsers(file);
                     System.out.println(SELECTION_OF_USER_ID.getMessage());
                     scanner.nextLine();
                     UUID userId = UUID.fromString(scanner.nextLine());
@@ -105,7 +115,7 @@ public class Main {
                     break;
                 case 6:
                     System.out.println();
-                    printAllUsers(file);
+                    userService.printAllUsers(file);
                     System.out.println();
                     printMenu();
                     break;
@@ -116,14 +126,6 @@ public class Main {
         }
 
 
-    }
-
-    private static void printAllUsers(File file) {
-        for (User user : userService.getAllUsers(file)) {
-            if (user != null) {
-                System.out.println(user);
-            }
-        }
     }
 
     static void printMenu() {
