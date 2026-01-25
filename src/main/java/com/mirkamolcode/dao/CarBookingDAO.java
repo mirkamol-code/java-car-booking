@@ -13,11 +13,6 @@ public class CarBookingDAO {
         bookings = new CarBooking[capacity];
     }
 
-    public CarBookingDAO(int capacity) {
-        this.capacity = capacity;
-        bookings = new CarBooking[capacity];
-    }
-
     public UUID saveCarBooking(CarBooking newBooking) {
         if (currentSize >= capacity) {
             this.capacity = bookings.length * 2;
@@ -37,7 +32,6 @@ public class CarBookingDAO {
 
     }
 
-
     private int getNextAvailableSlot() {
         for (int i = 0; i < bookings.length; i++) {
             if (bookings[i] == null) {
@@ -47,11 +41,24 @@ public class CarBookingDAO {
         return -1;
     }
 
+
     public CarBooking[] selectAllBookings() {
         return bookings;
     }
 
-    public boolean deleteCarBooking1(UUID bookingId) {
+
+
+    public boolean deleteCarBooking(UUID bookingId) {
+        int index = findBookingIndex(bookingId);
+        if (index == -1) {
+            return false;
+        }
+
+        removeAt(index);
+        return true;
+    }
+
+    private int findBookingIndex(UUID bookingId) {
         int index = -1;
 
         for (int i = 0; i < bookings.length; i++) {
@@ -60,30 +67,14 @@ public class CarBookingDAO {
                 break;
             }
         }
-
-        if (index == -1) {
-            return false;
-        }
-
-        bookings[index] = null;
-
-        return true;
-
+        return index;
     }
 
-    public boolean deleteCarBooking(UUID bookingId) {
-        for (int indexToRemove = 0; indexToRemove < bookings.length; indexToRemove++) {
-            if (bookings[indexToRemove].getBookingId().equals(bookingId)) {
-                CarBooking[] shrunkedArray = new CarBooking[bookings.length - 1];
-
-                System.arraycopy(bookings, 0, shrunkedArray, 0, bookings.length - 1);
-                System.arraycopy(bookings, indexToRemove + 1, shrunkedArray, indexToRemove, bookings.length - indexToRemove - 1);
-
-                bookings = shrunkedArray;
-                currentSize--;
-                return true;
-            }
+    private void removeAt(int index) {
+        for (int i = index; i < currentSize - 1; i++) {
+            bookings[i] = bookings[i + 1];
         }
-        return false;
+
+        bookings[--currentSize] = null;
     }
 }
