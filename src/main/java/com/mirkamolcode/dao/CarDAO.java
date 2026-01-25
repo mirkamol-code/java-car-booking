@@ -3,6 +3,8 @@ package com.mirkamolcode.dao;
 import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.enums.Brand;
 
+import java.util.UUID;
+
 public class CarDAO {
     private static Car[] cars;
     static {
@@ -20,10 +22,6 @@ public class CarDAO {
         return cars;
     }
 
-
-
-
-
     public Car selectCarByRegNumber(String regNumber) {
         for (Car car : cars) {
             String carRegNumFromArray = car.getRegNumber();
@@ -34,18 +32,33 @@ public class CarDAO {
         return null;
     }
 
-    public void removeCar(Car bookedCar) {
-        var indexToRemove = 0;
+    public boolean removeCar(Car car) {
+        int index = findCarIndex(car.getRegNumber());
+        if (index == -1) {
+            return false;
+        }
+
+        removeAt(index);
+        return true;
+    }
+
+    private int findCarIndex(String carRegNumber) {
+        int index = -1;
+
         for (int i = 0; i < cars.length; i++) {
-            if (cars[i].getRegNumber().equals(bookedCar.getRegNumber())) {
-                indexToRemove = i;
-                Car[] shrunkedCarArray = new Car[cars.length - 1];
-
-                System.arraycopy(cars, 0, shrunkedCarArray, 0, cars.length-1);
-                System.arraycopy(cars, indexToRemove + 1, shrunkedCarArray, indexToRemove, cars.length - indexToRemove - 1);
-
-                cars = shrunkedCarArray;
+            if (cars[i].getRegNumber().equals(carRegNumber)) {
+                index = i;
+                break;
             }
         }
+        return index;
+    }
+
+    private void removeAt(int index) {
+        for (int i = index; i < cars.length - 1; i++) {
+            cars[i] = cars[i + 1];
+        }
+
+        cars[cars.length-1] = null;
     }
 }

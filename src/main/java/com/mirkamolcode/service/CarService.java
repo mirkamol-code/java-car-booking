@@ -57,6 +57,6 @@ public class CarService {
     }
 
     public void deleteCar(Car car) {
-        carDAO.removeCar(car);
+        System.out.println(carDAO.removeCar(car));
     }
 }
