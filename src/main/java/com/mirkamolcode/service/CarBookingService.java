@@ -33,7 +33,7 @@ public class CarBookingService {
     }
 
 
-    public void getAllBookings() {
+    public void printAllBookings() {
         CarBooking[] carBookings = carBookingDAO.selectAllBookings();
         if (carBookings[0] != null) {
             for (CarBooking carBooking : carBookings) {
@@ -45,45 +45,58 @@ public class CarBookingService {
             System.out.println(NO_BOOKINGS.getMessage());
         }
     }
-
-    public void getUserBookedCarsByUserId(UUID id) {
-        User inputUserId = userService.getUserById(id);
-        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
-        int countUserBookings = 0;
-        if (userService.isUserExist(id)) {
-            for (CarBooking carBooking : carBookings) {
-                if (carBooking == null) {
-                    if (countUserBookings == 0) {
-                        System.out.println(X_USER.getMessage() + inputUserId + NOT_BOOKED.getMessage());
-                    }
-                    break;
-                } else {
-                    if (carBooking.getUser().equals(inputUserId)) {
-                        System.out.println(carBooking);
-                        countUserBookings++;
-                    }
-                }
-            }
-        } else {
-            System.out.println(NOT_FOUND.getMessage());
+    public void printUserBookedCars(UUID id){
+        CarBooking[] bookedCars = getUserBookedCarsByUserId(id);
+        for (CarBooking bookedCar : bookedCars) {
+            System.out.println(bookedCar);
         }
     }
+
+    private CarBooking[] getUserBookedCarsByUserId(UUID id) {
+        if (!userService.checkIfUserExsist(id)) {
+            return new CarBooking[0];
+        }
+
+        User user = userService.getUserById(id);
+        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
+        var countUserBookings = 0;
+
+        boolean isFound = false;
+        for (int i = 0; i < carBookings.length && carBookings[i] != null; i++) {
+            if (carBookings[i].getUser().equals(user)) {
+                isFound = true;
+                countUserBookings++;
+            }
+        }
+
+        if (!isFound) {
+            System.out.println(X_USER.getMessage() + user + NOT_BOOKED.getMessage());
+        }
+
+        CarBooking[] userBookedCar = new CarBooking[countUserBookings];
+        var index = 0;
+        for (int i = 0; i < carBookings.length && carBookings[i] != null; i++) {
+            if (carBookings[i].getUser().equals(user)) {
+                userBookedCar[index] = carBookings[i];
+                index++;
+            }
+        }
+
+        return userBookedCar;
+    }
+
 
     public boolean deleteCarBooking(UUID carBookingId) {
         return carBookingDAO.deleteCarBooking(carBookingId);
     }
 
-    public boolean isCarBookingExist(UUID id) {
-        try {
-            for (CarBooking carBooking : carBookingDAO.selectAllBookings()) {
-                if (carBooking.getBookingId().equals(id)) {
-                    return true;
-                }
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.print(INVALID_OPTION.getMessage() + " ");
-        }
 
+    public boolean isCarBookingExist(UUID id) {
+        for (CarBooking carBooking : carBookingDAO.selectAllBookings()) {
+            if (carBooking.getBookingId().equals(id)) {
+                return true;
+            }
+        }
         return false;
     }
 
