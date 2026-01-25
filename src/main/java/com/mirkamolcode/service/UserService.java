@@ -6,21 +6,30 @@ import com.mirkamolcode.model.User;
 import java.util.UUID;
 
 public class UserService {
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
 
-    public UserService() {
-        this.userDAO = new UserDAO();
+    public UserService(UserDAO users) {
+        this.userDAO = users;
     }
 
-    public User[] getAllUsers(){
+    public User[] getAllUsers() {
         return userDAO.selectAllUsers();
     }
 
-    public User getUserById(UUID uuid){
-        return userDAO.selectUserById(uuid);
+    public void printAllUsers() {
+        for (User user : getAllUsers()) {
+            if (user != null) {
+                System.out.println(user);
+            }
+        }
     }
 
-    public boolean isUserExist(UUID uuid){
-        return userDAO.selectUserById(uuid) != null;
+    public User getUserById(UUID userId) {
+        return userDAO.getUserById(userId);
     }
+
+    public boolean isUserPresent(UUID userId) {
+        return userDAO.isUserExist(userId);
+    }
+
 }

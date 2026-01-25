@@ -6,11 +6,12 @@ import com.mirkamolcode.model.Car;
 public class CarService {
     private final CarDAO carDAO;
 
-    public CarService() {
-        this.carDAO = new CarDAO();
+    public CarService(CarDAO carDAO) {
+        this.carDAO = carDAO;
     }
 
-    public void getAllCars() {
+
+    public void printAllCars() {
         for (Car car : carDAO.selectAllCars()) {
             if (car != null) {
                 System.out.println(car);
@@ -18,7 +19,13 @@ public class CarService {
         }
     }
 
-    public Car[] getElectricCars() {
+    public void printElectricCars(){
+        for (Car electricCar : getElectricCars()) {
+            System.out.println(electricCar);
+        }
+    }
+
+    private Car[] getElectricCars() {
         int count = 0;
         Car[] cars = carDAO.selectAllCars();
         for (Car car : cars) {
@@ -26,11 +33,13 @@ public class CarService {
                 count++;
             }
         }
+
         Car[] electricCars = new Car[count];
-        for (int i = 0; i < cars.length; i++) {
-            Car car = cars[i];
+        int index = 0;
+        for (Car car : cars) {
             if (car != null && car.isElectric()) {
-                electricCars[i] = car;
+                electricCars[index] = car;
+                index++;
             }
         }
         return electricCars;
@@ -48,6 +57,6 @@ public class CarService {
     }
 
     public void deleteCar(Car car) {
-        carDAO.removeCar(car);
+        System.out.println(carDAO.removeCar(car));
     }
 }

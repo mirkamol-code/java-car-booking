@@ -13,14 +13,9 @@ public class CarBookingDAO {
         bookings = new CarBooking[capacity];
     }
 
-    public CarBookingDAO(int capacity) {
-        this.capacity = capacity;
-        bookings = new CarBooking[capacity];
-    }
-
     public UUID saveCarBooking(CarBooking newBooking) {
         if (currentSize >= capacity) {
-            this.capacity =  bookings.length * 2;
+            this.capacity = bookings.length * 2;
             CarBooking[] newArray = new CarBooking[this.capacity];
             System.arraycopy(bookings, 0, newArray, 0, bookings.length);
             bookings = newArray;
@@ -37,7 +32,6 @@ public class CarBookingDAO {
 
     }
 
-
     private int getNextAvailableSlot() {
         for (int i = 0; i < bookings.length; i++) {
             if (bookings[i] == null) {
@@ -47,13 +41,24 @@ public class CarBookingDAO {
         return -1;
     }
 
+
     public CarBooking[] selectAllBookings() {
         return bookings;
     }
 
-    public boolean deleteCarBooking(UUID bookingId){
-        System.out.println("Initial size: " + bookings.length);
 
+
+    public boolean deleteCarBooking(UUID bookingId) {
+        int index = findBookingIndex(bookingId);
+        if (index == -1) {
+            return false;
+        }
+
+        removeAt(index);
+        return true;
+    }
+
+    private int findBookingIndex(UUID bookingId) {
         int index = -1;
 
         for (int i = 0; i < bookings.length; i++) {
@@ -62,15 +67,14 @@ public class CarBookingDAO {
                 break;
             }
         }
-
-        if (index == -1){
-            return false;
-        }
-
-        bookings[index] = null;
-
-        return true;
-
+        return index;
     }
 
+    private void removeAt(int index) {
+        for (int i = index; i < currentSize - 1; i++) {
+            bookings[i] = bookings[i + 1];
+        }
+
+        bookings[--currentSize] = null;
+    }
 }
