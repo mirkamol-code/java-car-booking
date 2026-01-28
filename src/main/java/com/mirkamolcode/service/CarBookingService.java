@@ -53,7 +53,7 @@ public class CarBookingService {
 
     private List<CarBooking> getUserBookedCarsByUserId(UUID id) {
         if (!userService.isUserPresent(id)) {
-            return null;
+            return new ArrayList<>();
         }
         boolean isFound = false;
 
