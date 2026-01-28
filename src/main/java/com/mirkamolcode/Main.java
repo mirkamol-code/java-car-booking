@@ -34,7 +34,7 @@ public class Main {
         while (inputString != 7) {
             switch (inputString) {
                 case 0:
-                    if (!carBookingService.isCarBookingArrayEmpty()) {
+                    if (carBookingService.isCarBookingListEmpty()) {
                         System.out.println(NO_BOOKINGS.getMessage());
                     } else {
                         carBookingService.printAllBookings();
