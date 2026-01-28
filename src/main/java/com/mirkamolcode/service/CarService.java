@@ -3,6 +3,9 @@ package com.mirkamolcode.service;
 import com.mirkamolcode.dao.CarDAO;
 import com.mirkamolcode.model.Car;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CarService {
     private final CarDAO carDAO;
 
@@ -12,34 +15,20 @@ public class CarService {
 
 
     public void printAllCars() {
-        for (Car car : carDAO.selectAllCars()) {
-            if (car != null) {
-                System.out.println(car);
-            }
-        }
+        carDAO.selectAllCars().forEach(System.out::println);
     }
 
-    public void printElectricCars(){
+    public void printElectricCars() {
         for (Car electricCar : getElectricCars()) {
             System.out.println(electricCar);
         }
     }
 
-    private Car[] getElectricCars() {
-        int count = 0;
-        Car[] cars = carDAO.selectAllCars();
-        for (Car car : cars) {
-            if (car != null && car.isElectric()) {
-                count++;
-            }
-        }
-
-        Car[] electricCars = new Car[count];
-        int index = 0;
-        for (Car car : cars) {
-            if (car != null && car.isElectric()) {
-                electricCars[index] = car;
-                index++;
+    private List<Car> getElectricCars() {
+        List<Car> electricCars = new ArrayList<>();
+        for (Car car : carDAO.selectAllCars()) {
+            if (car.isElectric()) {
+                electricCars.add(car);
             }
         }
         return electricCars;

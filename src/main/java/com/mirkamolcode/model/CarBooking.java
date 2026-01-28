@@ -1,6 +1,7 @@
 package com.mirkamolcode.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public class CarBooking {
@@ -51,5 +52,17 @@ public class CarBooking {
                 ", car=" + car +
                 ", bookingTime=" + bookingTime +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CarBooking that = (CarBooking) o;
+        return Objects.equals(bookingId, that.bookingId) && Objects.equals(user, that.user) && Objects.equals(car, that.car) && Objects.equals(bookingTime, that.bookingTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bookingId, user, car, bookingTime);
     }
 }

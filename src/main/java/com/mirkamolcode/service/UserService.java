@@ -3,6 +3,7 @@ package com.mirkamolcode.service;
 import com.mirkamolcode.dao.UserDAO;
 import com.mirkamolcode.model.User;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
@@ -12,16 +13,12 @@ public class UserService {
         this.userDAO = users;
     }
 
-    public User[] getAllUsers() {
+    public List<User> getAllUsers() {
         return userDAO.selectAllUsers();
     }
 
     public void printAllUsers() {
-        for (User user : getAllUsers()) {
-            if (user != null) {
-                System.out.println(user);
-            }
-        }
+        getAllUsers().forEach(System.out::println);
     }
 
     public User getUserById(UUID userId) {
