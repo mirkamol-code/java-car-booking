@@ -5,6 +5,8 @@ import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.CarBooking;
 import com.mirkamolcode.model.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.mirkamolcode.model.enums.ResponseMessage.*;
@@ -34,38 +36,33 @@ public class CarBookingService {
 
 
     public void printAllBookings() {
-        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
-        if (carBookings[0] != null) {
-            for (CarBooking carBooking : carBookings) {
-                if (carBooking != null) {
-                    System.out.println(carBooking);
-                }
-            }
-        } else {
+        List<CarBooking> carBookings = carBookingDAO.selectAllBookings();
+        if (carBookings.isEmpty()) {
             System.out.println(NO_BOOKINGS.getMessage());
+        } else {
+            carBookings.forEach(System.out::println);
         }
     }
-    public void printUserBookedCars(UUID id){
-        CarBooking[] bookedCars = getUserBookedCarsByUserId(id);
+
+    public void printUserBookedCars(UUID id) {
+        List<CarBooking> bookedCars = getUserBookedCarsByUserId(id);
         for (CarBooking bookedCar : bookedCars) {
             System.out.println(bookedCar);
         }
     }
 
-    private CarBooking[] getUserBookedCarsByUserId(UUID id) {
+    private List<CarBooking> getUserBookedCarsByUserId(UUID id) {
         if (!userService.isUserPresent(id)) {
-            return new CarBooking[0];
+            return null;
         }
+        boolean isFound = false;
 
         User user = userService.getUserById(id);
-        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
-        var countUserBookings = 0;
-
-        boolean isFound = false;
-        for (int i = 0; i < carBookings.length && carBookings[i] != null; i++) {
-            if (carBookings[i].getUser().equals(user)) {
+        List<CarBooking> userBookings = new ArrayList<>();
+        for (CarBooking carBooking : carBookingDAO.selectAllBookings()) {
+            if (carBooking.getUser().equals(user)) {
+                userBookings.add(carBooking);
                 isFound = true;
-                countUserBookings++;
             }
         }
 
@@ -73,16 +70,7 @@ public class CarBookingService {
             System.out.println(X_USER.getMessage() + user + NOT_BOOKED.getMessage());
         }
 
-        CarBooking[] userBookedCar = new CarBooking[countUserBookings];
-        var index = 0;
-        for (int i = 0; i < carBookings.length && carBookings[i] != null; i++) {
-            if (carBookings[i].getUser().equals(user)) {
-                userBookedCar[index] = carBookings[i];
-                index++;
-            }
-        }
-
-        return userBookedCar;
+        return userBookings;
     }
 
 
@@ -100,9 +88,7 @@ public class CarBookingService {
         return false;
     }
 
-    public boolean isCarBookingArrayEmpty() {
-        CarBooking[] carBookings = carBookingDAO.selectAllBookings();
-        return carBookings[0] != null;
-
+    public boolean isCarBookingListEmpty() {
+        return carBookingDAO.selectAllBookings().isEmpty();
     }
 }
