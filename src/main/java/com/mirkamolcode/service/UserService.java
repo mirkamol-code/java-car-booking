@@ -17,10 +17,6 @@ public class UserService {
         return userDAO.selectAllUsers();
     }
 
-    public void printAllUsers() {
-        getAllUsers().forEach(System.out::println);
-    }
-
     public User getUserById(UUID userId) {
         return userDAO.getUserById(userId);
     }

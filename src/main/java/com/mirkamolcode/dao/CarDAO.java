@@ -23,13 +23,9 @@ public class CarDAO {
     }
 
     public Car selectCarByRegNumber(String regNumber) {
-        for (Car car : carList) {
-            String carRegNumFromArray = car.getRegNumber();
-            if (carRegNumFromArray.equals(regNumber)) {
-                return car;
-            }
-        }
-        return null;
+        return carList.stream()
+                .filter(car -> car.getRegNumber().equals(regNumber))
+                .findFirst().orElse(null);
     }
 
     public boolean removeCar(Car car) {

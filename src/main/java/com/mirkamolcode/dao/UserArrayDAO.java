@@ -24,12 +24,10 @@ public class UserArrayDAO implements UserDAO {
 
     @Override
     public User getUserById(UUID userId) {
-        for (User user : selectAllUsers()) {
-            if (user.getId().equals(userId)) {
-                return user;
-            }
-        }
-        return null;
+        return selectAllUsers().stream()
+                .filter(user -> user.getId().equals(userId))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

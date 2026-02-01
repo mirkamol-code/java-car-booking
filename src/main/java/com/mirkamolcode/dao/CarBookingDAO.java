@@ -17,12 +17,10 @@ public class CarBookingDAO {
     }
 
     public CarBooking getCarBookingById(UUID id) {
-        for (CarBooking carBooking : bookingList) {
-            if (carBooking.getBookingId().equals(id)) {
-                return carBooking;
-            }
-        }
-        return null;
+        return bookingList.stream()
+                .filter(carBooking -> carBooking.getBookingId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     public UUID saveCarBooking(CarBooking newBooking) {

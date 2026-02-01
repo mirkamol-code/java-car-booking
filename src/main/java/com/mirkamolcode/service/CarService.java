@@ -13,26 +13,10 @@ public class CarService {
         this.carDAO = carDAO;
     }
 
-
-    public void printAllCars() {
-        carDAO.selectAllCars().forEach(System.out::println);
-    }
-
-    public void printElectricCars() {
-        for (Car electricCar : getElectricCars()) {
-            System.out.println(electricCar);
-        }
-    }
-
-    private List<Car> getElectricCars() {
-        List<Car> electricCars = new ArrayList<>();
-        for (Car car : carDAO.selectAllCars()) {
-            if (car.isElectric()) {
-                electricCars.add(car);
-            }
-        }
-        return electricCars;
-
+    public List<Car> getElectricCars() {
+        return carDAO.selectAllCars().stream()
+                .filter(Car::isElectric)
+                .toList();
     }
 
     public Car getCarByRegNumber(String regNumber) {
@@ -40,9 +24,7 @@ public class CarService {
     }
 
     public boolean isRegNumberExist(String regNumber) {
-        Car car = carDAO.selectCarByRegNumber(regNumber);
-        return car != null;
-
+         return carDAO.selectCarByRegNumber(regNumber) !=null;
     }
 
     public void deleteCar(Car car) {

@@ -4,10 +4,12 @@ import com.mirkamolcode.dao.*;
 import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.User;
 import com.mirkamolcode.model.enums.Menu;
+import com.mirkamolcode.model.enums.ResponseMessage;
 import com.mirkamolcode.service.CarBookingService;
 import com.mirkamolcode.service.CarService;
 import com.mirkamolcode.service.UserService;
 
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -18,14 +20,14 @@ public class Main {
 
     static void main() {
         //Construct dependencies
-        UserDAO userDAO = new UserArrayDAO();
+        UserDAO userDAO = new UserFileDAO();
         UserService userService = new UserService(userDAO);
         CarDAO carDAO = new CarDAO();
         CarService carService = new CarService(carDAO);
         CarBookingDAO carBookingDAO = new CarBookingDAO();
 
         //Inject dependencies
-        CarBookingService carBookingService = new CarBookingService(carBookingDAO, carService, userService);
+        CarBookingService carBookingService = new CarBookingService(carBookingDAO, carService);
 
         printMenu();
 
@@ -36,8 +38,9 @@ public class Main {
                 case 0:
                     if (carBookingService.isCarBookingListEmpty()) {
                         System.out.println(NO_BOOKINGS.getMessage());
+
                     } else {
-                        carBookingService.printAllBookings();
+                        carBookingDAO.selectAllBookings().forEach(System.out::println);
                         System.out.println(SELECTION_OF_BOOKING_ID.getMessage());
                         scanner.nextLine();
                         UUID bookingId = UUID.fromString(scanner.nextLine());
@@ -48,12 +51,13 @@ public class Main {
 
                         } else {
                             System.out.println(carBookingService.deleteCarBooking(bookingId));
+
                         }
                     }
                     printMenu();
                     break;
                 case 1:
-                    carService.printAllCars();
+                    carDAO.selectAllCars().forEach(System.out::println);
                     System.out.println(SELECTION_OF_CAR_REG_NUMBER.getMessage());
                     scanner.nextLine();
 
@@ -63,7 +67,7 @@ public class Main {
 
                     } else {
                         Car carByRegNumber = carService.getCarByRegNumber(carRegNumber);
-                        userService.printAllUsers();
+                        userService.getAllUsers().forEach(System.out::println);
                         System.out.println(SELECTION_OF_USER_ID.getMessage());
                         var userId = UUID.fromString(scanner.nextLine());
 
@@ -80,35 +84,52 @@ public class Main {
                     printMenu();
                     break;
                 case 2:
-                    userService.printAllUsers();
+                    userService.getAllUsers().forEach(System.out::println);
                     System.out.println(SELECTION_OF_USER_ID.getMessage());
                     scanner.nextLine();
                     UUID userId = UUID.fromString(scanner.nextLine());
-                    carBookingService.printUserBookedCars(userId);
+                    if (!userService.isUserPresent(userId)) {
+                        System.out.println(X_USER.getMessage());
+
+                    } else {
+                        if (carBookingService.getUserBookedCarsByUserId(userId).isEmpty()) {
+                            System.out.println(X_USER.getMessage() + userId + NOT_BOOKED.getMessage());
+
+                        } else {
+                            carBookingService.getUserBookedCarsByUserId(userId).forEach(System.out::println);
+
+                        }
+                    }
                     System.out.println();
                     printMenu();
                     break;
                 case 3:
                     System.out.println();
-                    carBookingService.printAllBookings();
+                    if (carBookingService.isCarBookingListEmpty()) {
+                        System.out.println(NO_BOOKINGS.getMessage());
+
+                    } else {
+                        carBookingDAO.selectAllBookings().forEach(System.out::println);
+
+                    }
                     System.out.println();
                     printMenu();
                     break;
                 case 4:
                     System.out.println();
-                    carService.printAllCars();
+                    carDAO.selectAllCars().forEach(System.out::println);
                     System.out.println();
                     printMenu();
                     break;
                 case 5:
                     System.out.println();
-                    carService.printElectricCars();
+                    carService.getElectricCars().forEach(System.out::println);
                     System.out.println();
                     printMenu();
                     break;
                 case 6:
                     System.out.println();
-                    userService.printAllUsers();
+                    userService.getAllUsers().forEach(System.out::println);
                     System.out.println();
                     printMenu();
                     break;
@@ -122,8 +143,7 @@ public class Main {
     }
 
     static void printMenu() {
-        for (Menu value : Menu.values()) {
-            System.out.println(value.getMessage());
-        }
+        Arrays.stream(Menu.values())
+                .forEach(value -> System.out.println(value.getMessage()));
     }
 }

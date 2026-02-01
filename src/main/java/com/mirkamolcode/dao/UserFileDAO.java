@@ -16,21 +16,15 @@ public class UserFileDAO implements UserDAO {
 
     @Override
     public List<User> selectAllUsers() {
-        try {
-            return getUsersFromFileToArray();
-        } catch (IOException e) {
-            return null;
-        }
+        return getUsersFromFileToArray();
     }
 
     @Override
     public User getUserById(UUID id) {
-        for (User user : selectAllUsers()) {
-            if (user.getId().equals(id)) {
-                return user;
-            }
-        }
-        return null;
+        return selectAllUsers().stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -38,7 +32,7 @@ public class UserFileDAO implements UserDAO {
         return getUserById(id) != null;
     }
 
-    private List<User> getUsersFromFileToArray() throws IOException {
+    private List<User> getUsersFromFileToArray() {
         List<User> users = new ArrayList<>();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
