@@ -1,10 +1,7 @@
 package com.mirkamolcode;
 
 import com.mirkamolcode.dao.*;
-import com.mirkamolcode.model.Car;
-import com.mirkamolcode.model.User;
 import com.mirkamolcode.model.enums.Menu;
-import com.mirkamolcode.model.enums.ResponseMessage;
 import com.mirkamolcode.service.CarBookingService;
 import com.mirkamolcode.service.CarService;
 import com.mirkamolcode.service.UserService;
@@ -27,119 +24,81 @@ public class Main {
         CarBookingDAO carBookingDAO = new CarBookingDAO();
 
         //Inject dependencies
-        CarBookingService carBookingService = new CarBookingService(carBookingDAO, carService);
+        CarBookingService carBookingService = new CarBookingService(carBookingDAO, carService, userService);
 
         printMenu();
 
         Scanner scanner = new Scanner(System.in);
         int inputString = scanner.nextInt();
         while (inputString != 7) {
-            switch (inputString) {
-                case 0:
-                    if (carBookingService.isCarBookingListEmpty()) {
-                        System.out.println(NO_BOOKINGS.getMessage());
-
-                    } else {
-                        carBookingDAO.selectAllBookings().forEach(System.out::println);
+            try {
+                switch (inputString) {
+                    case 0:
+                        carBookingService.getAllBookings().forEach(System.out::println);
                         System.out.println(SELECTION_OF_BOOKING_ID.getMessage());
                         scanner.nextLine();
                         UUID bookingId = UUID.fromString(scanner.nextLine());
+                        System.out.println(carBookingService.deleteCarBooking(bookingId));
 
-                        boolean carBookingExist = carBookingService.isCarBookingExist(bookingId);
-                        if (!carBookingExist) {
-                            System.out.println(NOT_FOUND);
+                        printMenu();
+                        break;
+                    case 1:
+                        carService.getAllCars().forEach(System.out::println);
+                        System.out.println(SELECTION_OF_CAR_REG_NUMBER.getMessage());
+                        scanner.nextLine();
+                        var carRegNumber = scanner.nextLine();
 
-                        } else {
-                            System.out.println(carBookingService.deleteCarBooking(bookingId));
-
-                        }
-                    }
-                    printMenu();
-                    break;
-                case 1:
-                    carDAO.selectAllCars().forEach(System.out::println);
-                    System.out.println(SELECTION_OF_CAR_REG_NUMBER.getMessage());
-                    scanner.nextLine();
-
-                    String carRegNumber = scanner.nextLine();
-                    if (!carService.isRegNumberExist(carRegNumber)) {
-                        System.out.println(NOT_FOUND.getMessage());
-
-                    } else {
-                        Car carByRegNumber = carService.getCarByRegNumber(carRegNumber);
                         userService.getAllUsers().forEach(System.out::println);
                         System.out.println(SELECTION_OF_USER_ID.getMessage());
                         var userId = UUID.fromString(scanner.nextLine());
 
-                        if (!userService.isUserPresent(userId)) {
-                            System.out.println(NOT_FOUND.getMessage());
+                        carBookingService.bookCar(carRegNumber, userId);
 
-                        } else {
-                            User userById = userService.getUserById(userId);
-                            carBookingService.bookCar(userById, carByRegNumber);
-                            System.out.println();
-
-                        }
-                    }
-                    printMenu();
-                    break;
-                case 2:
-                    userService.getAllUsers().forEach(System.out::println);
-                    System.out.println(SELECTION_OF_USER_ID.getMessage());
-                    scanner.nextLine();
-                    UUID userId = UUID.fromString(scanner.nextLine());
-                    if (!userService.isUserPresent(userId)) {
-                        System.out.println(X_USER.getMessage());
-
-                    } else {
-                        if (carBookingService.getUserBookedCarsByUserId(userId).isEmpty()) {
-                            System.out.println(X_USER.getMessage() + userId + NOT_BOOKED.getMessage());
-
-                        } else {
-                            carBookingService.getUserBookedCarsByUserId(userId).forEach(System.out::println);
-
-                        }
-                    }
-                    System.out.println();
-                    printMenu();
-                    break;
-                case 3:
-                    System.out.println();
-                    if (carBookingService.isCarBookingListEmpty()) {
-                        System.out.println(NO_BOOKINGS.getMessage());
-
-                    } else {
-                        carBookingDAO.selectAllBookings().forEach(System.out::println);
-
-                    }
-                    System.out.println();
-                    printMenu();
-                    break;
-                case 4:
-                    System.out.println();
-                    carDAO.selectAllCars().forEach(System.out::println);
-                    System.out.println();
-                    printMenu();
-                    break;
-                case 5:
-                    System.out.println();
-                    carService.getElectricCars().forEach(System.out::println);
-                    System.out.println();
-                    printMenu();
-                    break;
-                case 6:
-                    System.out.println();
-                    userService.getAllUsers().forEach(System.out::println);
-                    System.out.println();
-                    printMenu();
-                    break;
-                default:
-                    System.out.println(inputString + INVALID_OPTION.getMessage());
+                        System.out.println();
+                        printMenu();
+                        break;
+                    case 2:
+                        userService.getAllUsers().forEach(System.out::println);
+                        System.out.println(SELECTION_OF_USER_ID.getMessage());
+                        scanner.nextLine();
+                        UUID id = UUID.fromString(scanner.nextLine());
+                        carBookingService.getUserBookedCarsByUserId(id).forEach(System.out::println);
+                        System.out.println();
+                        printMenu();
+                        break;
+                    case 3:
+                        System.out.println();
+                        carBookingService.getAllBookings().forEach(System.out::println);
+                        System.out.println();
+                        printMenu();
+                        break;
+                    case 4:
+                        System.out.println();
+                        carService.getAllCars().forEach(System.out::println);
+                        System.out.println();
+                        printMenu();
+                        break;
+                    case 5:
+                        System.out.println();
+                        carService.getElectricCars().forEach(System.out::println);
+                        System.out.println();
+                        printMenu();
+                        break;
+                    case 6:
+                        System.out.println();
+                        userService.getAllUsers().forEach(System.out::println);
+                        System.out.println();
+                        printMenu();
+                        break;
+                    default:
+                        System.out.println(inputString + INVALID_OPTION.getMessage());
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                printMenu();
             }
             inputString = scanner.nextInt();
         }
-
-
     }
 
     static void printMenu() {

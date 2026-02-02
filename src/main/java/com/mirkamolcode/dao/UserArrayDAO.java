@@ -2,10 +2,7 @@ package com.mirkamolcode.dao;
 
 import com.mirkamolcode.model.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class UserArrayDAO implements UserDAO {
     private static  List<User> users = new ArrayList<>(
@@ -23,15 +20,9 @@ public class UserArrayDAO implements UserDAO {
     }
 
     @Override
-    public User getUserById(UUID userId) {
+    public Optional<User> getUserById(UUID userId) {
         return selectAllUsers().stream()
                 .filter(user -> user.getId().equals(userId))
-                .findFirst()
-                .orElse(null);
-    }
-
-    @Override
-    public boolean isUserExist(UUID id) {
-        return getUserById(id) != null;
+                .findFirst();
     }
 }

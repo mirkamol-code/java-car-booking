@@ -4,6 +4,7 @@ import com.mirkamolcode.model.CarBooking;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class CarBookingDAO {
@@ -16,11 +17,10 @@ public class CarBookingDAO {
         return bookingList;
     }
 
-    public CarBooking getCarBookingById(UUID id) {
+    public Optional<CarBooking> getCarBookingById(UUID id) {
         return bookingList.stream()
                 .filter(carBooking -> carBooking.getBookingId().equals(id))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     public UUID saveCarBooking(CarBooking newBooking) {
@@ -29,7 +29,7 @@ public class CarBookingDAO {
     }
 
     public boolean deleteCarBooking(UUID id) {
-        CarBooking carBooking = getCarBookingById(id);
+        CarBooking carBooking = getCarBookingById(id).get();
         return bookingList.remove(carBooking);
     }
 }

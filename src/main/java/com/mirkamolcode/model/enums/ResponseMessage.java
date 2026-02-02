@@ -6,23 +6,23 @@ public enum ResponseMessage {
     SELECTION_OF_USER_ID("➡️ select user id"),
     SELECTION_OF_CAR_REG_NUMBER("➡️ select car reg number"),
     SELECTION_OF_BOOKING_ID("➡️ select booking id number"),
-    X_USER(" ❌ user "), NOT_BOOKED(" has no car booked"),
     BOOKED_CAR("🎉 Successfully booked car with reg number "),
     BOOKING_REF("Booking ref: "),
-    BOOKINGS("booking = "),
-    NO_CARS("❌ No cars available for renting"),
-    UNKNOWN_USER(" User Not Found"),
+    X_USER(" ❌ user "), NOT_BOOKED(" has no car booked"),
     FOR_USER(" for user "),
-    NOT_FOUND(" ❌ not found "),
+    NO_CARS("❌ No cars available for renting"),
+    UNKNOWN_USER("❌ User Not Found"),
+    BOOKING_ID_NOT_FOUND(" ❌ not found "),
+    CAR_NOT_FOUND(" ❌ Car Not Found "),
     UNABLE_TO_BOOK(" ❌ Unable to book");
 
     private final String message;
 
-    ResponseMessage(String message){
+    ResponseMessage(String message) {
         this.message = message;
     }
 
-    public String getMessage(){
+    public String getMessage() {
         return message;
     }
 }
