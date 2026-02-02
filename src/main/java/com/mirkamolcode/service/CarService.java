@@ -33,6 +33,6 @@ public class CarService {
     public void deleteCar(String regNum) {
        carDAO.selectCarByRegNumber(regNum)
                 .orElseThrow(() -> new NoSuchElementException(CAR_NOT_FOUND.getMessage()));
-        System.out.println(carDAO.removeCarByRegNumber(regNum));
+        carDAO.removeCarByRegNumber(regNum);
     }
 }
