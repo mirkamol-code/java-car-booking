@@ -7,6 +7,7 @@ import com.mirkamolcode.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static com.mirkamolcode.model.enums.ResponseMessage.*;
@@ -22,73 +23,42 @@ public class CarBookingService {
         this.userService = userService;
     }
 
+    public List<CarBooking> getAllBookings() {
+        return carBookingDAO.selectAllBookings();
+    }
 
-    public void bookCar(User user, Car car) {
+    public void bookCar(String carRegNumber, UUID userId) {
+        Car car = carService.getCarByRegNumber(carRegNumber);
+        User user = userService.getUserById(userId);
+
         CarBooking carBooking = new CarBooking(user, car);
         carBooking.setBookingId(UUID.randomUUID());
         UUID savedBookingId = carBookingDAO.saveCarBooking(carBooking);
 
-        carService.deleteCar(car);
+        carService.deleteCar(carRegNumber);
 
         System.out.println(BOOKED_CAR.getMessage() + car.getRegNumber() + FOR_USER.getMessage() + user);
         System.out.println(BOOKING_REF.getMessage() + savedBookingId);
     }
 
-
-    public void printAllBookings() {
-        List<CarBooking> carBookings = carBookingDAO.selectAllBookings();
-        if (carBookings.isEmpty()) {
-            System.out.println(NO_BOOKINGS.getMessage());
-        } else {
-            carBookings.forEach(System.out::println);
-        }
-    }
-
-    public void printUserBookedCars(UUID id) {
-        List<CarBooking> bookedCars = getUserBookedCarsByUserId(id);
-        for (CarBooking bookedCar : bookedCars) {
-            System.out.println(bookedCar);
-        }
-    }
-
-    private List<CarBooking> getUserBookedCarsByUserId(UUID id) {
-        if (!userService.isUserPresent(id)) {
-            return new ArrayList<>();
-        }
-        boolean isFound = false;
-
-        User user = userService.getUserById(id);
-        List<CarBooking> userBookings = new ArrayList<>();
-        for (CarBooking carBooking : carBookingDAO.selectAllBookings()) {
-            if (carBooking.getUser().equals(user)) {
-                userBookings.add(carBooking);
-                isFound = true;
-            }
-        }
-
-        if (!isFound) {
-            System.out.println(X_USER.getMessage() + user + NOT_BOOKED.getMessage());
-        }
-
-        return userBookings;
+    public List<CarBooking> getUserBookedCarsByUserId(UUID userId) {
+        User user = userService.getUserById(userId);
+        return carBookingDAO.selectAllBookings()
+                .stream()
+                .filter(carBooking ->
+                        carBooking.getUser().equals(user))
+                .toList();
     }
 
 
     public boolean deleteCarBooking(UUID carBookingId) {
-        return carBookingDAO.deleteCarBooking(carBookingId);
-    }
+        if (carBookingDAO.selectAllBookings().isEmpty()) {
+            throw new NoSuchElementException(NO_BOOKINGS.getMessage());
 
+        } else if (carBookingDAO.getCarBookingById(carBookingId).isEmpty()) {
+            throw new NoSuchElementException(BOOKING_ID_NOT_FOUND.getMessage());
 
-    public boolean isCarBookingExist(UUID id) {
-        for (CarBooking carBooking : carBookingDAO.selectAllBookings()) {
-            if (carBooking.getBookingId().equals(id)) {
-                return true;
-            }
         }
-        return false;
-    }
-
-    public boolean isCarBookingListEmpty() {
-        return carBookingDAO.selectAllBookings().isEmpty();
+        return carBookingDAO.deleteCarBooking(carBookingId);
     }
 }

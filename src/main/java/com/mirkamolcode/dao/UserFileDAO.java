@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class UserFileDAO implements UserDAO {
@@ -16,29 +17,17 @@ public class UserFileDAO implements UserDAO {
 
     @Override
     public List<User> selectAllUsers() {
-        try {
-            return getUsersFromFileToArray();
-        } catch (IOException e) {
-            return null;
-        }
+        return getUsersFromFileToList();
     }
 
     @Override
-    public User getUserById(UUID id) {
-        for (User user : selectAllUsers()) {
-            if (user.getId().equals(id)) {
-                return user;
-            }
-        }
-        return null;
+    public Optional<User> getUserById(UUID id) {
+        return selectAllUsers().stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst();
     }
 
-    @Override
-    public boolean isUserExist(UUID id) {
-        return getUserById(id) != null;
-    }
-
-    private List<User> getUsersFromFileToArray() throws IOException {
+    private List<User> getUsersFromFileToList() {
         List<User> users = new ArrayList<>();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {

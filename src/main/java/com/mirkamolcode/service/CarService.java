@@ -3,8 +3,10 @@ package com.mirkamolcode.service;
 import com.mirkamolcode.dao.CarDAO;
 import com.mirkamolcode.model.Car;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import static com.mirkamolcode.model.enums.ResponseMessage.*;
 
 public class CarService {
     private final CarDAO carDAO;
@@ -13,39 +15,24 @@ public class CarService {
         this.carDAO = carDAO;
     }
 
-
-    public void printAllCars() {
-        carDAO.selectAllCars().forEach(System.out::println);
+    public List<Car> getAllCars() {
+        return carDAO.selectAllCars();
     }
 
-    public void printElectricCars() {
-        for (Car electricCar : getElectricCars()) {
-            System.out.println(electricCar);
-        }
-    }
-
-    private List<Car> getElectricCars() {
-        List<Car> electricCars = new ArrayList<>();
-        for (Car car : carDAO.selectAllCars()) {
-            if (car.isElectric()) {
-                electricCars.add(car);
-            }
-        }
-        return electricCars;
-
+    public List<Car> getElectricCars() {
+        return carDAO.selectAllCars().stream()
+                .filter(Car::isElectric)
+                .toList();
     }
 
     public Car getCarByRegNumber(String regNumber) {
-        return carDAO.selectCarByRegNumber(regNumber);
+        return carDAO.selectCarByRegNumber(regNumber)
+                .orElseThrow(() -> new NoSuchElementException(CAR_NOT_FOUND.getMessage()));
     }
 
-    public boolean isRegNumberExist(String regNumber) {
-        Car car = carDAO.selectCarByRegNumber(regNumber);
-        return car != null;
-
-    }
-
-    public void deleteCar(Car car) {
-        System.out.println(carDAO.removeCar(car));
+    public void deleteCar(String regNum) {
+       carDAO.selectCarByRegNumber(regNum)
+                .orElseThrow(() -> new NoSuchElementException(CAR_NOT_FOUND.getMessage()));
+        carDAO.removeCarByRegNumber(regNum);
     }
 }

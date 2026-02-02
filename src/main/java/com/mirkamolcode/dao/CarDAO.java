@@ -3,9 +3,9 @@ package com.mirkamolcode.dao;
 import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.enums.Brand;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static com.mirkamolcode.model.enums.ResponseMessage.CAR_NOT_FOUND;
 
 public class CarDAO {
     private static List<Car> carList = new ArrayList<>(
@@ -22,17 +22,16 @@ public class CarDAO {
         return carList;
     }
 
-    public Car selectCarByRegNumber(String regNumber) {
-        for (Car car : carList) {
-            String carRegNumFromArray = car.getRegNumber();
-            if (carRegNumFromArray.equals(regNumber)) {
-                return car;
-            }
-        }
-        return null;
+    public Optional<Car> selectCarByRegNumber(String regNumber) {
+        return carList.stream()
+                .filter(car -> car.getRegNumber().equals(regNumber))
+                .findFirst();
     }
 
-    public boolean removeCar(Car car) {
+    public boolean removeCarByRegNumber(String regNum) {
+        Car car = selectCarByRegNumber(regNum)
+                .orElseThrow(
+                        () -> new NoSuchElementException(CAR_NOT_FOUND.getMessage()));
         return carList.remove(car);
     }
 }
