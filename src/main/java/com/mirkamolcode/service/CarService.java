@@ -16,10 +16,6 @@ public class CarService {
     }
 
     public List<Car> getAllCars() {
-        if (carDAO.selectAllCars().isEmpty()) {
-            throw new NoSuchElementException(NO_CARS.getMessage());
-
-        }
         return carDAO.selectAllCars();
     }
 
@@ -30,14 +26,13 @@ public class CarService {
     }
 
     public Car getCarByRegNumber(String regNumber) {
-        if (carDAO.selectCarByRegNumber(regNumber).isEmpty()) {
-            throw new NoSuchElementException(CAR_NOT_FOUND.getMessage());
-
-        }
-        return carDAO.selectCarByRegNumber(regNumber).get();
+        return carDAO.selectCarByRegNumber(regNumber)
+                .orElseThrow(() -> new NoSuchElementException(CAR_NOT_FOUND.getMessage()));
     }
 
-    public void deleteCar(Car car) {
-        System.out.println(carDAO.removeCar(car));
+    public void deleteCar(String regNum) {
+       carDAO.selectCarByRegNumber(regNum)
+                .orElseThrow(() -> new NoSuchElementException(CAR_NOT_FOUND.getMessage()));
+        System.out.println(carDAO.removeCarByRegNumber(regNum));
     }
 }

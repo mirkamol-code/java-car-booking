@@ -24,10 +24,6 @@ public class CarBookingService {
     }
 
     public List<CarBooking> getAllBookings() {
-        if (carBookingDAO.selectAllBookings().isEmpty()) {
-            throw new NoSuchElementException(NO_BOOKINGS.getMessage());
-
-        }
         return carBookingDAO.selectAllBookings();
     }
 
@@ -39,7 +35,7 @@ public class CarBookingService {
         carBooking.setBookingId(UUID.randomUUID());
         UUID savedBookingId = carBookingDAO.saveCarBooking(carBooking);
 
-        carService.deleteCar(car);
+        carService.deleteCar(carRegNumber);
 
         System.out.println(BOOKED_CAR.getMessage() + car.getRegNumber() + FOR_USER.getMessage() + user);
         System.out.println(BOOKING_REF.getMessage() + savedBookingId);
@@ -47,17 +43,11 @@ public class CarBookingService {
 
     public List<CarBooking> getUserBookedCarsByUserId(UUID userId) {
         User user = userService.getUserById(userId);
-        List<CarBooking> bookedCars = carBookingDAO.selectAllBookings()
+        return carBookingDAO.selectAllBookings()
                 .stream()
                 .filter(carBooking ->
                         carBooking.getUser().equals(user))
                 .toList();
-
-        if (bookedCars.isEmpty()) {
-            throw new NoSuchElementException(X_USER.getMessage() + userId + NOT_BOOKED.getMessage());
-
-        }
-        return bookedCars;
     }
 
 

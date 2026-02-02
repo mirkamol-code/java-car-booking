@@ -21,11 +21,8 @@ public class UserService {
     }
 
     public User getUserById(UUID userId) {
-        if (userDAO.getUserById(userId).isEmpty()) {
-            throw new NoSuchElementException(UNKNOWN_USER.getMessage());
-
-        }
-        return userDAO.getUserById(userId).get();
+        return userDAO.getUserById(userId)
+                .orElseThrow(() -> new NoSuchElementException(UNKNOWN_USER.getMessage()));
     }
 
 }
