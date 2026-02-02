@@ -2,10 +2,9 @@ package com.mirkamolcode.dao;
 
 import com.mirkamolcode.model.CarBooking;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+
+import static com.mirkamolcode.model.enums.ResponseMessage.BOOKING_ID_NOT_FOUND;
 
 public class CarBookingDAO {
     private static List<CarBooking> bookingList = new ArrayList<>();
@@ -29,7 +28,8 @@ public class CarBookingDAO {
     }
 
     public boolean deleteCarBooking(UUID id) {
-        CarBooking carBooking = getCarBookingById(id).get();
+        CarBooking carBooking = getCarBookingById(id)
+                .orElseThrow(()-> new NoSuchElementException(BOOKING_ID_NOT_FOUND.getMessage()));
         return bookingList.remove(carBooking);
     }
 }
