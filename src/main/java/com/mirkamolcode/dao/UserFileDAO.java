@@ -6,13 +6,24 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
 
 public class UserFileDAO implements UserDAO {
-    private static final String FILE_PATH = "src/main/java/com/mirkamolcode/users.csv";
+    private static final URI FILE_PATH;
+    static {
+        try {
+            FILE_PATH = Objects.requireNonNull(UserFileDAO.class
+                            .getClassLoader()
+                            .getResource("users.csv"))
+                    .toURI();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     private static final File file = new File(FILE_PATH);
 
     @Override
@@ -29,7 +40,6 @@ public class UserFileDAO implements UserDAO {
 
     private List<User> getUsersFromFileToList() {
         List<User> users = new ArrayList<>();
-
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String userLine;
             while ((userLine = bufferedReader.readLine()) != null) {
