@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import static com.mirkamolcode.model.enums.ResponseMessage.NO_USERS;
 import static com.mirkamolcode.model.enums.ResponseMessage.UNKNOWN_USER;
 
 public class UserService {
@@ -17,6 +18,9 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
+        if (userDAO.selectAllUsers().isEmpty()) {
+            throw new NoSuchElementException(NO_USERS.getMessage());
+        }
         return userDAO.selectAllUsers();
     }
 
