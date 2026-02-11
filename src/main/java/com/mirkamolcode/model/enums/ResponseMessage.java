@@ -11,6 +11,7 @@ public enum ResponseMessage {
     X_USER(" ❌ user "), NOT_BOOKED(" has no car booked"),
     FOR_USER(" for user "),
     NO_CARS("❌ No cars available for renting"),
+    NO_ELECTRIC_CARS("❌ No electric cars available for renting"),
     UNKNOWN_USER("❌ User Not Found"),
     BOOKING_ID_NOT_FOUND(" ❌ not found "),
     CAR_NOT_FOUND(" ❌ Car Not Found "),
