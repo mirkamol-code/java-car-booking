@@ -17,7 +17,7 @@ public class Main {
 
     static void main() {
         //Construct dependencies
-        UserDAO userDAO = new UserFileDAO();
+        UserDAO userDAO = new UserFakerDAS();
         UserService userService = new UserService(userDAO);
         CarDAO carDAO = new CarDAO();
         CarService carService = new CarService(carDAO);
