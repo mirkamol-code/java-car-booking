@@ -1,14 +1,12 @@
 package com.mirkamolcode.service;
 
 import com.mirkamolcode.dao.UserDAO;
-import com.mirkamolcode.dao.UserFileDAO;
 import com.mirkamolcode.model.User;
 import com.mirkamolcode.model.enums.ResponseMessage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
@@ -67,7 +65,6 @@ class UserServiceTest {
     @Test
     void shouldThrowWhenUserNotFound() {
         // given
-
         given(userDAO.getUserById(any())).willReturn(Optional.empty());
         // then
         assertThatThrownBy(() -> underTest.getUserById(any()))

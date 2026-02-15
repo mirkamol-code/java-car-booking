@@ -2,7 +2,6 @@ package com.mirkamolcode.service;
 
 import com.mirkamolcode.dao.CarDAO;
 import com.mirkamolcode.model.Car;
-import com.mirkamolcode.model.User;
 import com.mirkamolcode.model.enums.Brand;
 import com.mirkamolcode.model.enums.ResponseMessage;
 import org.junit.jupiter.api.Test;
@@ -16,11 +15,9 @@ import java.util.*;
 import static com.mirkamolcode.model.enums.ResponseMessage.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CarServiceTest {
