@@ -60,7 +60,7 @@ class UserServiceTest {
         // when
         User actual = underTest.getUserById(expectedUserId);
         // then
-        assertThat(actual).isEqualTo(expected.get());
+        assertThat(actual).isPresent().contains(.......);
     }
     @Test
     void shouldThrowWhenUserNotFound() {
