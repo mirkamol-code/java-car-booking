@@ -5,6 +5,7 @@ import com.mirkamolcode.model.Car;
 import com.mirkamolcode.model.CarBooking;
 import com.mirkamolcode.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -24,29 +25,18 @@ public class CarBookingService {
 
     public List<CarBooking> getAllBookings() {
         List<CarBooking> carBookings = carBookingDAO.selectAllBookings();
-        if (carBookings == null || carBookings.isEmpty()) {
-            throw new NoSuchElementException(NO_BOOKINGS.getMessage());
-        }
-        return carBookings;
+        return carBookings == null ? new ArrayList<>() : carBookings;
     }
 
     public void bookCar(String carRegNumber, UUID userId) {
-           Car car = carService.getCarByRegNumber(carRegNumber);
-            if (car == null) {
+        Car car = carService.getCarByRegNumber(carRegNumber);
+        if (car == null) {
             throw new NoSuchElementException(CAR_NOT_FOUND.getMessage());
 
         }
         User user = userService.getUserById(userId);
         if (user == null) {
             throw new NoSuchElementException(UNKNOWN_USER.getMessage());
-        }
-       
-        User user = userService.getUserById(userId);
-        if (user == null) {
-            throw new NoSuchElementException(UNKNOWN_USER.getMessage());
-        }
-        if (car == null) {
-            throw new NoSuchElementException(CAR_NOT_FOUND.getMessage());
 
         }
 

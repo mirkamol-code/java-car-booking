@@ -3,6 +3,7 @@ package com.mirkamolcode.service;
 import com.mirkamolcode.dao.CarDAO;
 import com.mirkamolcode.model.Car;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -16,11 +17,7 @@ public class CarService {
     }
 
     public List<Car> getAllCars() {
-        if (carDAO.selectAllCars() == null || carDAO.selectAllCars().isEmpty()) {
-            throw new NoSuchElementException(NO_CARS.getMessage());
-        }
-
-        return carDAO.selectAllCars();
+        return carDAO.selectAllCars() == null ? new ArrayList<>() : carDAO.selectAllCars();
     }
 
     public List<Car> getElectricCars() {

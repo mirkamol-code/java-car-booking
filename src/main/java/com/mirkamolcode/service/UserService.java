@@ -18,9 +18,6 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        if (userDAO.selectAllUsers().isEmpty()) {
-            throw new NoSuchElementException(NO_USERS.getMessage());
-        }
         return userDAO.selectAllUsers();
     }
 

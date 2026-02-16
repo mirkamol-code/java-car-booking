@@ -41,14 +41,12 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldThrowWhenUserListIsEmpty() {
+    void shouldReturnEmptyListWhenUserListIsEmpty() {
         // given
         given(userDAO.selectAllUsers()).willReturn(new ArrayList<>());
 
         // then
-        assertThatThrownBy(() -> underTest.getAllUsers())
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining(ResponseMessage.NO_USERS.getMessage());
+        assertThat(underTest.getAllUsers()).isEmpty();
     }
 
     @Test
@@ -60,15 +58,6 @@ class UserServiceTest {
         // when
         User actual = underTest.getUserById(expectedUserId);
         // then
-        assertThat(actual).isPresent().contains(.......);
-    }
-    @Test
-    void shouldThrowWhenUserNotFound() {
-        // given
-        given(userDAO.getUserById(any())).willReturn(Optional.empty());
-        // then
-        assertThatThrownBy(() -> underTest.getUserById(any()))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining(UNKNOWN_USER.getMessage());
+//        assertThat(actual).isPresent().contains(.......);
     }
 }

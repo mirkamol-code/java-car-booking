@@ -45,25 +45,21 @@ class CarServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenCarListIsEmpty() {
+    void shouldReturnEmptyListWhenCarListIsEmpty() {
         // given
         given(carDAO.selectAllCars()).willReturn(new ArrayList<>());
 
         // then
-        assertThatThrownBy(() -> underTest.getAllCars())
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining(NO_CARS.getMessage());
+        assertThat(underTest.getAllCars()).isEmpty();
     }
 
     @Test
-    void shouldThrowExceptionWhenCarListIsNull() {
+    void shouldEmptyListWhenCarListIsNull() {
         // given
         given(carDAO.selectAllCars()).willReturn(null);
 
         // then
-        assertThatThrownBy(() -> underTest.getAllCars())
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining(NO_CARS.getMessage());
+        assertThat(underTest.getAllCars()).isEmpty();
     }
 
     @Test

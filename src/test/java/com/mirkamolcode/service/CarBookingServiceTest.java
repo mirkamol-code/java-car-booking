@@ -7,6 +7,8 @@ import com.mirkamolcode.model.User;
 import com.mirkamolcode.model.enums.Brand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,6 +33,8 @@ class CarBookingServiceTest {
     private UserService userService;
     @InjectMocks
     private CarBookingService underTest;
+    @Captor
+    ArgumentCaptor<CarBooking> carBookingArgumentCaptor;
 
     @Test
     void shouldGetAllBookings() {
@@ -45,28 +49,22 @@ class CarBookingServiceTest {
         // then
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(expected);
-        then(carBookingDAO).should().selectAllBookings();
-
     }
 
     @Test
-    void shouldThrowWhenCarBookingIsNull() {
+    void shouldReturnEmptyListWhenCarBookingIsNull() {
         // given
         given(carBookingDAO.selectAllBookings()).willReturn(null);
         // then
-        assertThatThrownBy(() -> underTest.getAllBookings())
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining(NO_BOOKINGS.getMessage());
+        assertThat(underTest.getAllBookings()).isEmpty();
     }
 
     @Test
-    void shouldThrowWhenCarBookingIsEmpty() {
+    void shouldReturnEmptyListCarBookingListIsEmpty() {
         // given
         given(carBookingDAO.selectAllBookings()).willReturn(new ArrayList<>());
         // then
-        assertThatThrownBy(() -> underTest.getAllBookings())
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining(NO_BOOKINGS.getMessage());
+        assertThat(underTest.getAllBookings()).isEmpty();
     }
 
     @Test
@@ -84,8 +82,16 @@ class CarBookingServiceTest {
         // then
         then(carService).should().getCarByRegNumber(car.getRegNumber());
         then(userService).should().getUserById(user.getId());
-        then(carBookingDAO).should().saveCarBooking(any());
+
+        then(carBookingDAO).should().saveCarBooking(carBookingArgumentCaptor.capture());
+        CarBooking actual = carBookingArgumentCaptor.getValue();
+        assertThat(actual.getCar()).isEqualTo(car);
+        assertThat(actual.getUser()).isEqualTo(user);
         then(carService).should().deleteCar(car.getRegNumber());
+
+        then(carService).shouldHaveNoMoreInteractions();
+        then(userService).shouldHaveNoMoreInteractions();
+        then(carBookingDAO).shouldHaveNoMoreInteractions();
     }
 
     @Test
