@@ -50,7 +50,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserById() {
+    void shouldGetUserById() {
         // given
         UUID expectedUserId = UUID.randomUUID();
         Optional<User> expected = Optional.of(new User(expectedUserId, "Jamila"));
@@ -58,6 +58,10 @@ class UserServiceTest {
         // when
         User actual = underTest.getUserById(expectedUserId);
         // then
-//        assertThat(actual).isPresent().contains(.......);
+        // Thank you for your suggestion commit
+        // but How can I implement your suggestion comment
+        // if underTest.getUserById() returns User
+        // and throws exception by recieving optional from userDAO.getUserById(expectedUserId)
+        assertThat(actual).isEqualTo(expected.get());
     }
 }
