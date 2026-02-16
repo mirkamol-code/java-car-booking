@@ -31,7 +31,16 @@ public class CarBookingService {
     }
 
     public void bookCar(String carRegNumber, UUID userId) {
-        Car car = carService.getCarByRegNumber(carRegNumber);
+           Car car = carService.getCarByRegNumber(carRegNumber);
+            if (car == null) {
+            throw new NoSuchElementException(CAR_NOT_FOUND.getMessage());
+
+        }
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            throw new NoSuchElementException(UNKNOWN_USER.getMessage());
+        }
+       
         User user = userService.getUserById(userId);
         if (user == null) {
             throw new NoSuchElementException(UNKNOWN_USER.getMessage());
