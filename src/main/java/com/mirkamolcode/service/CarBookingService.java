@@ -29,7 +29,15 @@ public class CarBookingService {
 
     public void bookCar(String carRegNumber, UUID userId) {
         Car car = carService.getCarByRegNumber(carRegNumber);
+        if (car == null) {
+            throw new NoSuchElementException(CAR_NOT_FOUND.getMessage());
+
+        }
         User user = userService.getUserById(userId);
+        if (user == null) {
+            throw new NoSuchElementException(UNKNOWN_USER.getMessage());
+
+        }
 
         CarBooking carBooking = new CarBooking(user, car);
         carBooking.setBookingId(UUID.randomUUID());
@@ -43,6 +51,9 @@ public class CarBookingService {
 
     public List<CarBooking> getUserBookedCarsByUserId(UUID userId) {
         User user = userService.getUserById(userId);
+        if (user == null) {
+            throw new NoSuchElementException(UNKNOWN_USER.getMessage());
+        }
         return carBookingDAO.selectAllBookings()
                 .stream()
                 .filter(carBooking ->

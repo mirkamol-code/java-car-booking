@@ -3,6 +3,7 @@ package com.mirkamolcode.service;
 import com.mirkamolcode.dao.CarDAO;
 import com.mirkamolcode.model.Car;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -31,7 +32,7 @@ public class CarService {
     }
 
     public void deleteCar(String regNum) {
-       carDAO.selectCarByRegNumber(regNum)
+        carDAO.selectCarByRegNumber(regNum)
                 .orElseThrow(() -> new NoSuchElementException(CAR_NOT_FOUND.getMessage()));
         carDAO.removeCarByRegNumber(regNum);
     }
