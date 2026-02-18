@@ -52,14 +52,6 @@ class CarBookingServiceTest {
     }
 
     @Test
-    void shouldReturnEmptyListWhenCarBookingIsNull() {
-        // given
-        given(carBookingDAO.selectAllBookings()).willReturn(null);
-        // then
-        assertThat(underTest.getAllBookings()).isEmpty();
-    }
-
-    @Test
     void shouldReturnEmptyListCarBookingListIsEmpty() {
         // given
         given(carBookingDAO.selectAllBookings()).willReturn(new ArrayList<>());
@@ -97,9 +89,11 @@ class CarBookingServiceTest {
     @Test
     void shouldThrowWhenUserNotFoundToBookCar() {
         // given
+        Car car = new Car("1111",20.0, Brand.AUDI, true);
+        given(carService.getCarByRegNumber(car.getRegNumber())).willReturn(car);
         given(userService.getUserById(any())).willReturn(null);
         // when
-        assertThatThrownBy(() -> underTest.bookCar("1111", any()))
+        assertThatThrownBy(() -> underTest.bookCar(car.getRegNumber(), any()))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining(UNKNOWN_USER.getMessage());
         then(carBookingDAO).shouldHaveNoInteractions();
@@ -110,7 +104,6 @@ class CarBookingServiceTest {
         // given
         User user = new User(UUID.randomUUID(), "Jame");
         given(carService.getCarByRegNumber(any())).willReturn(null);
-        given(userService.getUserById(any())).willReturn(user);
         // when
         assertThatThrownBy(() -> underTest.bookCar(any(), user.getId()))
                 .isInstanceOf(NoSuchElementException.class)

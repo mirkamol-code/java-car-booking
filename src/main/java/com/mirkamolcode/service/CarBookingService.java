@@ -24,8 +24,7 @@ public class CarBookingService {
     }
 
     public List<CarBooking> getAllBookings() {
-        List<CarBooking> carBookings = carBookingDAO.selectAllBookings();
-        return carBookings == null ? new ArrayList<>() : carBookings;
+        return carBookingDAO.selectAllBookings();
     }
 
     public void bookCar(String carRegNumber, UUID userId) {

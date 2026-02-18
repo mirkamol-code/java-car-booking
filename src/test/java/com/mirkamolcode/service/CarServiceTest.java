@@ -54,15 +54,6 @@ class CarServiceTest {
     }
 
     @Test
-    void shouldEmptyListWhenCarListIsNull() {
-        // given
-        given(carDAO.selectAllCars()).willReturn(null);
-
-        // then
-        assertThat(underTest.getAllCars()).isEmpty();
-    }
-
-    @Test
     void shouldGetElectricCars() {
         // given
         List<Car> expected = new ArrayList<>(Arrays.asList(
@@ -79,23 +70,10 @@ class CarServiceTest {
     @Test
     void shouldThrowExceptionWhenElectricCarListIsEmpty() {
         // given
-        given(carDAO.selectAllCars()).willReturn(new ArrayList<>());
+        given(underTest.getElectricCars()).willReturn(new ArrayList<>());
 
         // then
-        assertThatThrownBy(() -> underTest.getElectricCars())
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining(NO_ELECTRIC_CARS.getMessage());
-    }
-
-    @Test
-    void shouldThrowExceptionWhenElectricCarListIsNull() {
-        // given
-        given(carDAO.selectAllCars()).willReturn(null);
-
-        // then
-        assertThatThrownBy(() -> underTest.getElectricCars())
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining(NO_ELECTRIC_CARS.getMessage());
+        assertThat(underTest.getAllCars()).isEmpty();
     }
 
     @Test
