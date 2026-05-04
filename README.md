@@ -1,175 +1,294 @@
-# Car Booking CLI Project
+# 🚗 Car Booking CLI System
 
-[![Java](https://img.shields.io/badge/Java-25-blue?logo=java&logoColor=white)](https://www.java.com/)
-[![GitHub](https://img.shields.io/badge/GitHub-Project-black?logo=github)](https://github.com/)
+A **Java-based command-line application** for managing car rentals and bookings.  
+The project demonstrates **layered architecture, OOP principles, in-memory data handling, file-based user loading, and unit testing**.
 
----
-
-## Table of Contents
-
-- [Overview](#overview)  
-- [Project Goals](#project-goals)  
-- [Technologies Used](#technologies-used)  
-- [Project Architecture](#project-architecture)  
-  - [Domain / Model Layer](#1-domain--model-layer)  
-  - [DAO Layer](#2-dao-data-access-object-layer)  
-  - [Service Layer](#3-service-layer)  
-  - [Main / CLI Layer](#4-main--cli-layer)  
-- [Features Implemented](#features-implemented)  
-- [Key Challenges](#key-challenges)  
-- [Enhancements Completed](#enhancements-completed)  
-- [Future Improvements](#future-improvements)  
-- [Learning Outcomes](#learning-outcomes)  
-- [Demo](#demo)  
-- [Author](#author)  
+![Java](https://img.shields.io/badge/Java-25-blue)
+![Maven](https://img.shields.io/badge/Build-Maven-orange)
+![JUnit](https://img.shields.io/badge/Tests-JUnit%205-green)
 
 ---
 
-## Overview
+## 📌 Overview
 
-The **Car Booking CLI Project** is a console-based Java application that simulates a simple car rental and booking system. The project focuses on applying core Java concepts such as object-oriented programming, layered architecture, and data management using `ArrayList` along with file-based persistence for saving and loading data.
+The **Car Booking CLI System** simulates a simplified car rental platform where users can:
 
-This project was developed as a learning-oriented system to strengthen practical skills in Java, Git, and clean project structuring.
+- Browse available cars
+- Filter electric cars
+- Book and cancel cars
+- View bookings per user
+- Manage users loaded from CSV or generated dynamically
 
----
+This project was built as a **learning-focused backend system** to strengthen:
 
-## Project Goals
-
-- Practice core Java fundamentals through a real-world use case  
-- Understand and apply layered architecture (Domain, DAO, Service)  
-- Implement business logic without relying on external databases  
-- Build a fully interactive CLI application using `Scanner`  
-- Handle common challenges related to dynamic data structures and data persistence  
-
----
-
-## Technologies Used
-
-- **Java (Core Java)**  
-- **Command Line Interface (CLI)**  
-- **Git & GitHub**  
-- **File-based persistence** for saving and loading application data  
-- No external frameworks or databases  
+- Object-Oriented Programming (OOP)
+- Layered architecture design
+- CLI-based application flow
+- Java Collections API
+- File I/O and CSV processing
+- Unit testing with modern Java testing tools
 
 ---
 
-## Project Architecture
+## 🎯 Features
 
-The project follows a layered architecture pattern:
+### Core Features
+- View all users
+- View all available cars
+- View electric cars only
+- Book a car for a user
+- View all bookings
+- View bookings by user
+- Cancel bookings
 
-### 1. Domain / Model Layer
+### Data Features
+- Load users from CSV file
+- Generate sample users using JavaFaker
+- In-memory data handling using `ArrayList`
 
-Contains the core entities of the system, such as:
-
-- User  
-- Car  
-- ElectricCar  
-- Booking  
-
-These classes define the structure and attributes of system objects.
+### Testing Features
+- Unit tests for service layer logic
+- Mocked dependencies using Mockito
+- Assertions using AssertJ
 
 ---
 
-### 2. DAO (Data Access Object) Layer
+## 🛠 Tech Stack
 
-Responsible for managing data storage and retrieval. The project uses `ArrayList` for in-memory data storage and implements **file-based persistence** to save and load data across application runs.
+- Java 25
+- Maven
+- JUnit 5 (Jupiter)
+- Mockito
+- AssertJ
+- JavaFaker
 
-Responsibilities include:
+---
 
-- Storing users, cars, and bookings  
-- Searching by ID or registration number  
-- Adding and removing elements dynamically  
+## 🧱 Project Structure
+
+```
+
+java-cli-build/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/mirkamolcode/
+│   │   │       ├── model/
+│   │   │       ├── dao/
+│   │   │       ├── service/
+│   │   │       └── Main.java
+│   │   └── resources/
+│   │       └── users.csv
+│   ├── test/
+│   │   └── java/
+│   │       └── com/mirkamolcode/service/
+├── pom.xml
+└── README.md
+
+```
+
+---
+
+## 🏗 Architecture
+
+The project follows a **clean layered architecture**:
+
+---
+
+### 1. Model Layer
+
+Contains domain entities and enums:
+
+- `User`
+- `Car`
+- `CarBooking`
+- Supporting enums (brand, menu options, messages)
+
+Responsible for defining the **core business objects**.
+
+---
+
+### 2. DAO Layer
+
+Handles data access and storage logic.
+
+Responsibilities:
+- Manage cars, users, and bookings in memory
+- Load users from CSV file
+- Provide basic CRUD-like operations
+- Maintain application state using `ArrayList`
 
 ---
 
 ### 3. Service Layer
 
-Contains business logic and acts as a bridge between the DAO layer and the CLI.
+Contains business logic and rules.
 
-Responsibilities include:
-
-- Booking a car  
-- Validating user and car availability  
-- Filtering electric cars  
-- Coordinating operations across multiple DAOs  
-
----
-
-### 4. Main / CLI Layer
-
-Handles user interaction via the command line.
-
-Responsibilities include:
-
-- Displaying menus  
-- Reading user input using `Scanner`  
-- Calling appropriate service methods  
-- Running the application inside a loop  
+Responsibilities:
+- Booking validation logic
+- Car availability checks
+- Filtering electric cars
+- Managing bookings lifecycle
+- Handling cancellation logic
+- Coordinating DAO operations
 
 ---
 
-## Features Implemented
+### 4. CLI Layer (Main)
 
-- View all users  
-- View all available cars  
-- View all bookings  
-- Get a car by registration number  
-- Get a user by ID  
-- View electric cars only  
-- Book a car  
+Handles all user interaction.
 
----
-
-## Key Challenges
-
-### Data Management Without a Database
-
-Instead of using a traditional database, the project manages data using `ArrayList` and file-based persistence. Challenges included:
-
-- Maintaining data consistency  
-- Dynamically adding or removing elements  
-- Ensuring correct saving and loading of application data  
-
-These challenges were addressed by:
-
-- Using `ArrayList` for flexible in-memory storage  
-- Implementing file-based persistence for reading and writing data  
-- Structuring DAO classes to isolate data management responsibilities  
+Responsibilities:
+- Display menu options
+- Read user input using `Scanner`
+- Call service layer methods
+- Show results and error messages
 
 ---
 
-## Enhancements Completed
+## 📋 CLI Menu
 
-- Automatically remove booked cars from the available car list after successful booking  
-- Replaced arrays with `ArrayList` for more flexible data handling  
-- Added file-based persistence to save and load application data  
-- Implemented exception handling for invalid user input  
+```
 
----
+0 - Cancel booking
+1 - Book car
+2 - View user bookings
+3 - View all bookings
+4 - View available cars
+5 - View electric cars
+6 - View all users
+7 - Exit
 
-## Future Improvements
-
-- Add unit tests for service and DAO layers  
-- Improve CLI UX with better menus and input validation  
-
----
-
-## Learning Outcomes
-
-- Stronger understanding of Java OOP principles  
-- Hands-on experience with layered architecture  
-- Improved problem-solving skills with dynamic data structures  
-- Practical experience with CLI-based application flow and file I/O  
+````
 
 ---
 
-## Demo
+## ⚙️ Requirements
 
-<img width="778" height="306" alt="Screenshot 2026-01-29 at 11 28 52 PM" src="https://github.com/user-attachments/assets/b9f6f00d-5bf3-4b3f-bd87-d96138794e56" />
+- Java 25+
+- Maven 3.8+
 
+Check installation:
+
+```bash
+java --version
+mvn --version
+````
 
 ---
 
-## Author
+## 🚀 Getting Started
 
-Developed as a learning project by **Mirkamol**.
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd java-cli-build
+```
+
+### 2. Build project
+
+```bash
+mvn clean compile
+```
+
+### 3. Run tests
+
+```bash
+mvn test
+```
+
+### 4. Run application
+
+```bash
+mvn exec:java -Dexec.mainClass="com.mirkamolcode.Main"
+```
+
+Or run `Main.java` directly from your IDE.
+
+---
+
+## 🔁 Example Workflow
+
+1. Start application
+2. View available cars (`4`)
+3. View users (`6`)
+4. Book a car (`1`)
+5. Enter car registration number
+6. Enter user ID
+7. View bookings (`3`)
+8. Cancel booking (`0`)
+
+---
+
+## 🧪 Testing
+
+The project includes unit tests for service layer logic:
+
+* `CarBookingServiceTest`
+* `CarServiceTest`
+* `UserServiceTest`
+
+Run tests:
+
+```bash
+mvn test
+```
+
+---
+
+## 🚧 Key Challenges
+
+### 1. Data Management Without Database
+
+Instead of a database, the system uses:
+
+* `ArrayList` for in-memory storage
+* CSV file for initial user loading
+
+Challenges included:
+
+* Data consistency across operations
+* Synchronization between bookings and car availability
+* Maintaining clean separation of responsibilities
+
+---
+
+## 🔧 Improvements Implemented
+
+* Replaced arrays with `ArrayList`
+* Added file-based user loading (CSV)
+* Implemented booking removal from available cars
+* Introduced layered architecture (DAO → Service → CLI)
+* Added unit testing with Mockito + AssertJ
+* Improved input handling and exception safety
+
+---
+
+## 🚀 Future Improvements
+
+* Persist cars and bookings to file/database
+* Add authentication system
+* Improve CLI UX (clearer menus, navigation)
+* Add logging system (SLF4J / Logback)
+* Add integration tests
+* Package as executable JAR
+* Migrate to Spring Boot + REST API version
+
+---
+
+## 📚 Learning Outcomes
+
+* Strong understanding of Java OOP principles
+* Practical experience with layered architecture
+* Real-world CLI application design
+* Testing with JUnit, Mockito, and AssertJ
+* Working with file I/O and CSV parsing
+* Better project structuring and maintainability
+
+---
+
+## 👤 Author
+
+Developed by **Mirkamol**
+---
